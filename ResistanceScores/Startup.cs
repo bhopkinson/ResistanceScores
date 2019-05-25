@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ResistanceScores.Models;
+using ResistanceScores.Services;
 
 namespace ResistanceScores
 {
@@ -21,11 +24,18 @@ namespace ResistanceScores
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSwaggerDocument();
+
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=ResistanceScores;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<AppDbContext>
+                (options => options.UseSqlServer(connection));
+
+            services.AddScoped<IPlayerService, PlayerService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "WebUi/dist";
             });
         }
 
@@ -46,6 +56,9 @@ namespace ResistanceScores
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseSwagger();
+            app.UseSwaggerUi3();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -58,7 +71,7 @@ namespace ResistanceScores
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "WebUI";
 
                 if (env.IsDevelopment())
                 {
