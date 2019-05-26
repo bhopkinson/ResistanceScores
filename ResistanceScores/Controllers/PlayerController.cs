@@ -18,38 +18,42 @@ namespace ResistanceScores.Controllers
 
         public PlayerController(IPlayerService playerService)
         {
-            _playerService = playerService;
+            _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
         }
 
         [HttpGet]
-        public Task<List<PlayerListingDto>> Get()
+        public async Task<ActionResult<List<PlayerListingDto>>> GetPlayers()
         {
-           return _playerService.GetPlayers();
+            var players = await _playerService.GetPlayers();
+            return Ok(players);
         }
 
-        // GET: api/Player/5
-        [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PlayerDetailDto>> GetPlayer(int id)
         {
-            return Ok(await _playerService.GetPlayer(id));
+            var player = await _playerService.GetPlayer(id);
+            return Ok(player);
         }
-        // TODO see what we do at work
-        // POST: api/Player
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> CreatePlayer([FromBody] PlayerUpdateDto player)
         {
+            await _playerService.CreatePlayer(player);
+            return Ok();
         }
 
-        // PUT: api/Player/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult> UpdatePlayer([FromBody] PlayerUpdateDto player)
         {
+            await _playerService.UpdatePlayer(player);
+            return Ok();
         }
 
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeletePlayer(int id)
         {
+            await _playerService.DeletePlayer(id);
+            return Ok();
         }
     }
 }

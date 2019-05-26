@@ -14,27 +14,27 @@ namespace ResistanceScores.Services
 
         public PlayerService(AppDbContext appDbContext)
         {
-            _appDbContext = appDbContext;
+            _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
         public async Task CreatePlayer(PlayerUpdateDto player)
         {
-            _appDbContext
-                .Players
-                .Add(new Player()
-                {
-                    Id = player.Id,
-                    FirstName = player.FirstName,
-                    Surname = player.Surname,
-                    Initials = player.Initials
-                });
+            var newPlayer = new Player
+            {
+                Id = player.Id,
+                FirstName = player.FirstName,
+                Surname = player.Surname,
+                Initials = player.Initials
+            };
+
+            _appDbContext.Players.Add(newPlayer);
 
             await _appDbContext.SaveChangesAsync();
         }
 
         public async Task DeletePlayer(int id)
         {
-            var player = _appDbContext.Players.Single(o => o.Id == id);
+            var player = await _appDbContext.Players.SingleOrDefaultAsync(o => o.Id == id);
 
             _appDbContext.Players.Remove(player);
 
@@ -43,15 +43,14 @@ namespace ResistanceScores.Services
 
         public async Task<PlayerDetailDto> GetPlayer(int id)
         {
-            var player = await _appDbContext.Players.SingleOrDefaultAsync(o => o.Id == id);
-
-            return new PlayerDetailDto()
+            return await _appDbContext.Players.Select(o => new PlayerDetailDto
             {
-                Id = player.Id,
-                FirstName = player.FirstName,
-                Surname = player.Surname,
-                Initials = player.Initials,
-            };
+                Id = o.Id,
+                FirstName = o.FirstName,
+                Surname = o.Surname,
+                Initials = o.Initials,
+            })
+            .SingleOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<List<PlayerListingDto>> GetPlayers()
@@ -70,11 +69,13 @@ namespace ResistanceScores.Services
 
         public async Task UpdatePlayer(PlayerUpdateDto player)
         {
-            var dbPlayer = _appDbContext.Players.SingleOrDefault(o => o.Id == player.Id);
+            var dbPlayer = await _appDbContext.Players.SingleOrDefaultAsync(o => o.Id == player.Id);
 
             dbPlayer.FirstName = player.FirstName;
             dbPlayer.Surname = player.Surname;
             dbPlayer.Initials = player.Initials;
+
+            _appDbContext.Players.Update(dbPlayer);
 
             await _appDbContext.SaveChangesAsync();
         }
