@@ -17,11 +17,10 @@ namespace ResistanceScores.Services
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task CreatePlayer(PlayerUpdateDto player)
+        public async Task<int> CreatePlayer(PlayerUpdateDto player)
         {
             var newPlayer = new Player
             {
-                Id = player.Id,
                 FirstName = player.FirstName,
                 Surname = player.Surname,
                 Initials = player.Initials
@@ -30,6 +29,7 @@ namespace ResistanceScores.Services
             _appDbContext.Players.Add(newPlayer);
 
             await _appDbContext.SaveChangesAsync();
+            return newPlayer.Id;
         }
 
         public async Task DeletePlayer(int id)

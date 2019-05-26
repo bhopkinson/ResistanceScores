@@ -1,0 +1,30 @@
+
+
+
+<div *ngIf="!errorOccurred">
+  <div *ngIf="!isLoading">
+    <p><a [routerLink]="['/players/create']">Create new player</a></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Initials</th>
+          <th>Name</th>
+          <th>Edit</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players">
+          <td>{{player.initials}}</td>
+          <td>{{player.firstName}} {{player.surname}}</td>
+          <td><a [routerLink]="['/players/edit/' + player.id]">Edit</a></td>
+          <td><a [routerLink]="['/players/detail/' + player.id]">Details</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p *ngIf="isLoading">Loading...</p>
+</div>
+
+<p *ngIf="errorOccurred">An error has occured</p>
+

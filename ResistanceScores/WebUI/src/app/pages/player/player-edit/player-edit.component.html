@@ -1,0 +1,33 @@
+<h2><a [routerLink]="['players']">Back to players listing</a></h2>
+<h1>{{isNew ? 'Create' : 'Edit'}}</h1>
+<div *ngIf="!isLoading">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="firstName">First name</label>
+    <input id="firstName" formControlName="firstName">
+    <span *ngIf="form.controls.firstName.errors?.required && form.controls.firstName.touched" style="color: red">
+      First name is required
+    </span>
+
+    <br />
+
+    <label for="surname">Surname</label>
+    <input id="surname" formControlName="surname">
+    <span *ngIf="form.controls.surname.errors?.required && form.controls.surname.touched" style="color: red">
+      Surname is required
+    </span>
+
+    <br />
+
+    <label for="initials">Initials</label>
+    <input id="initials" formControlName="initials">
+    <span *ngIf="form.controls.initials.errors?.required && form.controls.initials.touched" style="color: red">
+      Initials are required
+    </span>
+
+    <br />
+
+    <button>Submit</button>
+  </form>
+  <button *ngIf="!isNew" (click)="delete()">Delete</button>
+</div>
+<p *ngIf="isLoading">Loading...</p>

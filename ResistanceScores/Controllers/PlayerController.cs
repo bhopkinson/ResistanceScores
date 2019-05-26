@@ -22,6 +22,7 @@ namespace ResistanceScores.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<PlayerDetailDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<PlayerListingDto>>> GetPlayers()
         {
             var players = await _playerService.GetPlayers();
@@ -29,31 +30,42 @@ namespace ResistanceScores.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PlayerDetailDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PlayerDetailDto>> GetPlayer(int id)
         {
             var player = await _playerService.GetPlayer(id);
+
+            if (player == null)
+            {
+                return NotFound();
+            }
+
             return Ok(player);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreatePlayer([FromBody] PlayerUpdateDto player)
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        public async Task<ActionResult<int>> CreatePlayer([FromBody] PlayerUpdateDto player)
         {
-            await _playerService.CreatePlayer(player);
-            return Ok();
+            var id = await _playerService.CreatePlayer(player);
+            return Ok(id);
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdatePlayer([FromBody] PlayerUpdateDto player)
         {
             await _playerService.UpdatePlayer(player);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeletePlayer(int id)
         {
             await _playerService.DeletePlayer(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

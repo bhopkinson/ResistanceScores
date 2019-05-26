@@ -1,0 +1,5 @@
+<h2><a [routerLink]="['players']">Back to players listing</a></h2>
+<div *ngIf="!isLoading">
+  <p>Name: {{player.firstName}} {{player.surname}}: ({{player.initials}})</p>
+</div>
+<p *ngIf="isLoading">Loading...</p>

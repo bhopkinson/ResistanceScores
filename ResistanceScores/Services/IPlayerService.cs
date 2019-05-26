@@ -11,7 +11,7 @@ namespace ResistanceScores.Services
     {
         Task<List<PlayerListingDto>> GetPlayers();
         Task<PlayerDetailDto> GetPlayer(int id);
-        Task CreatePlayer(PlayerUpdateDto player);
+        Task<int> CreatePlayer(PlayerUpdateDto player);
         Task UpdatePlayer(PlayerUpdateDto player);
         Task DeletePlayer(int id);
     }
