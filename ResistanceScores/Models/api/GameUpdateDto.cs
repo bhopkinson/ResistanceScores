@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ResistanceScores.Models
+namespace ResistanceScores.Models.api
 {
-    public class Game
+    public class GameUpdateDto
     {
         [Required]
         public int Id { get; set; }
@@ -17,6 +17,7 @@ namespace ResistanceScores.Models
         [Required]
         public bool ResistanceWin { get; set; }
 
-        public List<GamePlayer> Players { get; set; }
+        [Required]
+        public List<GamePlayerUpdateDto> Players { get; set; }
     }
 }

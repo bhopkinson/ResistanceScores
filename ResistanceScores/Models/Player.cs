@@ -22,5 +22,7 @@ namespace ResistanceScores.Models
         [Required]
         [StringLength(2)]
         public string Initials { get; set; }
+
+        public List<GamePlayer> Games { get; set; }
     }
 }

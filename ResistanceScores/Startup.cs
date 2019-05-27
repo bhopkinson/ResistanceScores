@@ -31,6 +31,7 @@ namespace ResistanceScores
                 (options => options.UseSqlServer(connection));
 
             services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<IGameService, GameService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
