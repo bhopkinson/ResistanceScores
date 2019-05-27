@@ -42,5 +42,33 @@ namespace ResistanceScores.Services
             await _appDbContext.SaveChangesAsync();
             return newGame.Id;
         }
+
+        public async Task CreateMultipleGames(List<GameUpdateDto> games)
+        {
+            var players = await _appDbContext
+                .Players
+                .ToListAsync();
+
+            foreach(var game in games)
+            {
+                var newGamePlayers = game.Players.Select(o => new GamePlayer
+                {
+                    WasResistance = o.WasResistance,
+                    Player = players.Where(p => p.Initials == o.Initials).SingleOrDefault()
+                })
+                .ToList();
+
+                var newGame = new Game
+                {
+                    Date = game.Date,
+                    ResistanceWin = game.ResistanceWin,
+                    Players = newGamePlayers
+                };
+
+                _appDbContext.Games.Add(newGame);
+            }
+
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 }

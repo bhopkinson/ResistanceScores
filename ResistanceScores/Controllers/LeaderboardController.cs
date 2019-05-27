@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ResistanceScores.Models;
 using ResistanceScores.Models.api;
 using ResistanceScores.Services;
 
@@ -12,22 +11,22 @@ namespace ResistanceScores.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GameController : ControllerBase
+    public class LeaderboardController : ControllerBase
     {
-        private IGameService _gameService;
+        private ILeaderboardService _leaderboardService;
 
-        public GameController(IGameService gameService)
+        public LeaderboardController(ILeaderboardService leaderboardService)
         {
-            _gameService = gameService ?? throw new ArgumentNullException(nameof(gameService));
+            _leaderboardService = leaderboardService ?? throw new ArgumentNullException(nameof(leaderboardService));
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(typeof(List<GameDetailDto>), StatusCodes.Status200OK)]
-        //public async Task<ActionResult<List<GameListingDto>>> GetGames()
-        //{
-        //    var games = await _gameService.GetGames();
-        //    return Ok(games);
-        //}
+        [HttpGet]
+        [ProducesResponseType(typeof(List<LeaderboardDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboard()
+        {
+            var leaderboard = await _leaderboardService.GetLeaderboard();
+            return Ok(leaderboard);
+        }
 
         //[HttpGet("{id}")]
         //[ProducesResponseType(typeof(GameDetailDto), StatusCodes.Status200OK)]
@@ -51,14 +50,6 @@ namespace ResistanceScores.Controllers
         //    var id = await _gameService.CreateGame(game);
         //    return Ok(id);
         //}
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<int>> CreateMultipleGames([FromBody] List<GameUpdateDto> games)
-        {
-            await _gameService.CreateMultipleGames(games);
-            return Ok();
-        }
 
         //[HttpPut]
         //[ProducesResponseType(StatusCodes.Status204NoContent)]

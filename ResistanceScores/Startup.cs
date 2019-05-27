@@ -32,6 +32,7 @@ namespace ResistanceScores
 
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<ILeaderboardService, LeaderboardService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
