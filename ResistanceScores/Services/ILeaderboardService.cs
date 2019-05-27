@@ -9,6 +9,6 @@ namespace ResistanceScores.Services
 {
     public interface ILeaderboardService
     {
-        Task<List<LeaderboardDto>> GetLeaderboard();
+        Task<List<LeaderboardDto>> GetLeaderboard(QueryOptions queryOptions);
     }
 }

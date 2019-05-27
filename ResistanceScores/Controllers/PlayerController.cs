@@ -22,7 +22,7 @@ namespace ResistanceScores.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<PlayerDetailDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<PlayerListingDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<PlayerListingDto>>> GetPlayers()
         {
             var players = await _playerService.GetPlayers();

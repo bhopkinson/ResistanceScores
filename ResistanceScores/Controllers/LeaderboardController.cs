@@ -22,9 +22,9 @@ namespace ResistanceScores.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<LeaderboardDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboard()
+        public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboard([FromQuery] QueryOptions queryOptions)
         {
-            var leaderboard = await _leaderboardService.GetLeaderboard();
+            var leaderboard = await _leaderboardService.GetLeaderboard(queryOptions);
             return Ok(leaderboard);
         }
 

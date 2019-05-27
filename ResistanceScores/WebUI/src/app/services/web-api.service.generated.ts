@@ -15,6 +15,138 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
+export class GameClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
+    }
+
+    createMultipleGames(games: GameUpdateDto[]): Observable<number> {
+        let url_ = this.baseUrl + "/api/Game";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(games);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateMultipleGames(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateMultipleGames(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateMultipleGames(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+}
+
+@Injectable()
+export class LeaderboardClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
+    }
+
+    getLeaderboard(team: Team | undefined): Observable<LeaderboardDto[] | null> {
+        let url_ = this.baseUrl + "/api/Leaderboard?";
+        if (team === null)
+            throw new Error("The parameter 'team' cannot be null.");
+        else if (team !== undefined)
+            url_ += "Team=" + encodeURIComponent("" + team) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLeaderboard(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLeaderboard(<any>response_);
+                } catch (e) {
+                    return <Observable<LeaderboardDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LeaderboardDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLeaderboard(response: HttpResponseBase): Observable<LeaderboardDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(LeaderboardDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LeaderboardDto[] | null>(<any>null);
+    }
+}
+
+@Injectable()
 export class PlayerClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -129,7 +261,7 @@ export class PlayerClient {
         return _observableOf<number>(<any>null);
     }
 
-    updatePlayer(player: PlayerUpdateDto): Observable<FileResponse | null> {
+    updatePlayer(player: PlayerUpdateDto): Observable<void> {
         let url_ = this.baseUrl + "/api/Player";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -141,7 +273,6 @@ export class PlayerClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json", 
-                "Accept": "application/octet-stream"
             })
         };
 
@@ -152,31 +283,30 @@ export class PlayerClient {
                 try {
                     return this.processUpdatePlayer(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUpdatePlayer(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processUpdatePlayer(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 
     getPlayer(id: number): Observable<PlayerDetailDto | null> {
@@ -222,6 +352,10 @@ export class PlayerClient {
             result200 = resultData200 ? PlayerDetailDto.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("A server error occurred.", status, _responseText, _headers);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -230,7 +364,7 @@ export class PlayerClient {
         return _observableOf<PlayerDetailDto | null>(<any>null);
     }
 
-    deletePlayer(id: number): Observable<FileResponse | null> {
+    deletePlayer(id: number): Observable<void> {
         let url_ = this.baseUrl + "/api/Player/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -241,7 +375,6 @@ export class PlayerClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
             })
         };
 
@@ -252,32 +385,184 @@ export class PlayerClient {
                 try {
                     return this.processDeletePlayer(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processDeletePlayer(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processDeletePlayer(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<void>(<any>null);
     }
+}
+
+export class GameUpdateDto implements IGameUpdateDto {
+    id!: number;
+    date!: Date;
+    resistanceWin!: boolean;
+    players!: GamePlayerUpdateDto[];
+
+    constructor(data?: IGameUpdateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.players = [];
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.date = data["date"] ? new Date(data["date"].toString()) : <any>undefined;
+            this.resistanceWin = data["resistanceWin"];
+            if (data["players"] && data["players"].constructor === Array) {
+                this.players = [] as any;
+                for (let item of data["players"])
+                    this.players!.push(GamePlayerUpdateDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GameUpdateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameUpdateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["resistanceWin"] = this.resistanceWin;
+        if (this.players && this.players.constructor === Array) {
+            data["players"] = [];
+            for (let item of this.players)
+                data["players"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGameUpdateDto {
+    id: number;
+    date: Date;
+    resistanceWin: boolean;
+    players: GamePlayerUpdateDto[];
+}
+
+export class GamePlayerUpdateDto implements IGamePlayerUpdateDto {
+    initials!: string;
+    wasResistance!: boolean;
+
+    constructor(data?: IGamePlayerUpdateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.initials = data["initials"];
+            this.wasResistance = data["wasResistance"];
+        }
+    }
+
+    static fromJS(data: any): GamePlayerUpdateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GamePlayerUpdateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["initials"] = this.initials;
+        data["wasResistance"] = this.wasResistance;
+        return data; 
+    }
+}
+
+export interface IGamePlayerUpdateDto {
+    initials: string;
+    wasResistance: boolean;
+}
+
+export class LeaderboardDto implements ILeaderboardDto {
+    playerId!: number;
+    initials?: string | undefined;
+    wins!: number;
+    totalGames!: number;
+
+    constructor(data?: ILeaderboardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.playerId = data["playerId"];
+            this.initials = data["initials"];
+            this.wins = data["wins"];
+            this.totalGames = data["totalGames"];
+        }
+    }
+
+    static fromJS(data: any): LeaderboardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LeaderboardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["playerId"] = this.playerId;
+        data["initials"] = this.initials;
+        data["wins"] = this.wins;
+        data["totalGames"] = this.totalGames;
+        return data; 
+    }
+}
+
+export interface ILeaderboardDto {
+    playerId: number;
+    initials?: string | undefined;
+    wins: number;
+    totalGames: number;
+}
+
+export enum Team {
+    None = 0, 
+    Resistance = 1, 
+    Spy = 2, 
 }
 
 export class PlayerListingDto implements IPlayerListingDto {
@@ -422,13 +707,6 @@ export interface IPlayerUpdateDto {
     firstName: string;
     surname: string;
     initials: string;
-}
-
-export interface FileResponse {
-    data: Blob;
-    status: number;
-    fileName?: string;
-    headers?: { [name: string]: any };
 }
 
 export class SwaggerException extends Error {

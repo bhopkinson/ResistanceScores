@@ -1,0 +1,29 @@
+<div *ngIf="!errorOccurred">
+  <div *ngIf="!isLoading">
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Total games</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of leaderboard">
+          <td>{{player.initials}}</td>
+          <td>{{player.wins}}</td>
+          <td>{{losses(player)}}</td>
+          <td>{{player.totalGames}}</td>
+          <td>{{percentage(player) | number: '2.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button (click)="reload(Team.None)" [disabled]="teamFilter === Team.None">All games</button>
+    <button (click)="reload(Team.Resistance)" [disabled]="teamFilter === Team.Resistance">Just resistance</button>
+    <button (click)="reload(Team.Spy)" [disabled]="teamFilter === Team.Spy">Just spies</button>
+  </div>
+  <p *ngIf="isLoading">Loading...</p>
+</div>
+<p *ngIf="errorOccurred">An error has occurred</p>
