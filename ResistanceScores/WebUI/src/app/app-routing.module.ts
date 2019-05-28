@@ -21,7 +21,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'leaderboard',
+    path: '',
     component: LeaderboardComponent,
     children: [
       { path: '', component: AllTimeLeaderboardComponent },
