@@ -89,7 +89,7 @@ export class LeaderboardClient {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
     }
 
-    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | null | undefined): Observable<LeaderboardDto[] | null> {
+    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined): Observable<LeaderboardDto[] | null> {
         let url_ = this.baseUrl + "/api/Leaderboard?";
         if (team === null)
             throw new Error("The parameter 'team' cannot be null.");
@@ -99,7 +99,9 @@ export class LeaderboardClient {
             throw new Error("The parameter 'timescale' cannot be null.");
         else if (timescale !== undefined)
             url_ += "Timescale=" + encodeURIComponent("" + timescale) + "&"; 
-        if (noOfPlayers !== undefined)
+        if (noOfPlayers === null)
+            throw new Error("The parameter 'noOfPlayers' cannot be null.");
+        else if (noOfPlayers !== undefined)
             url_ += "NoOfPlayers=" + encodeURIComponent("" + noOfPlayers) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
