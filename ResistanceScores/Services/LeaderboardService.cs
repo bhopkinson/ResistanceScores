@@ -39,13 +39,33 @@ namespace ResistanceScores.Services
                     break;
             }
 
+            Expression<Func<GamePlayer, bool>> timescaleClause;
+            switch (queryOptions.Timescale)
+            {
+                case Enums.Timescale.Last30Days:
+                    timescaleClause = g => DateTime.Now < g.Game.Date.AddDays(30);
+                    break;
+                case Enums.Timescale.Last7Days:
+                    timescaleClause = g => DateTime.Now < g.Game.Date.AddDays(7);
+                    break;
+                default:
+                    timescaleClause = g => true;
+                    break;
+            }
+
             var leaderboard = await query
                 .Select(o => new LeaderboardDto
                 {
                     PlayerId = o.Id,
                     Initials = o.Initials,
-                    Wins = o.Games.AsQueryable().Where(teamClause).Where(g => (g.WasResistance && g.Game.ResistanceWin) || (!g.WasResistance && !g.Game.ResistanceWin)).Count(),
-                    TotalGames = o.Games.AsQueryable().Where(teamClause).Count(),
+                    Wins = o.Games.AsQueryable()
+                        .Where(timescaleClause)
+                        .Where(teamClause)
+                        .Where(g => (g.WasResistance && g.Game.ResistanceWin) || (!g.WasResistance && !g.Game.ResistanceWin)).Count(),
+                    TotalGames = o.Games.AsQueryable()
+                        .Where(timescaleClause)
+                        .Where(teamClause)
+                        .Count(),
                 })
                 .ToListAsync();
 

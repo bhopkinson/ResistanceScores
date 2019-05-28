@@ -20,9 +20,14 @@
         </tr>
       </tbody>
     </table>
-    <button (click)="reload(Team.None)" [disabled]="teamFilter === Team.None">All games</button>
-    <button (click)="reload(Team.Resistance)" [disabled]="teamFilter === Team.Resistance">Just resistance</button>
-    <button (click)="reload(Team.Spy)" [disabled]="teamFilter === Team.Spy">Just spies</button>
+    <br />
+    <button (click)="updateTeamFilter(Team.None)" [disabled]="teamFilter === Team.None">All games</button>
+    <button (click)="updateTeamFilter(Team.Resistance)" [disabled]="teamFilter === Team.Resistance">Just resistance</button>
+    <button (click)="updateTeamFilter(Team.Spy)" [disabled]="teamFilter === Team.Spy">Just spies</button>
+    <br />
+    <button (click)="updateTimescaleFilter(Timescale.AllTime)" [disabled]="timescaleFilter === Timescale.AllTime">All time</button>
+    <button (click)="updateTimescaleFilter(Timescale.Last7Days)" [disabled]="timescaleFilter === Timescale.Last7Days">Last 7 days</button>
+    <button (click)="updateTimescaleFilter(Timescale.Last30Days)" [disabled]="timescaleFilter === Timescale.Last30Days">Last 30 days</button>
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>

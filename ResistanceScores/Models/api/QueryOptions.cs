@@ -9,5 +9,7 @@ namespace ResistanceScores.Models.api
     public class QueryOptions
     {
         public Team Team { get; set; }
+
+        public Timescale Timescale { get; set; }
     }
 }

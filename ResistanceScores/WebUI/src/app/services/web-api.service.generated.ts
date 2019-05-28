@@ -89,12 +89,16 @@ export class LeaderboardClient {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
     }
 
-    getLeaderboard(team: Team | undefined): Observable<LeaderboardDto[] | null> {
+    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined): Observable<LeaderboardDto[] | null> {
         let url_ = this.baseUrl + "/api/Leaderboard?";
         if (team === null)
             throw new Error("The parameter 'team' cannot be null.");
         else if (team !== undefined)
             url_ += "Team=" + encodeURIComponent("" + team) + "&"; 
+        if (timescale === null)
+            throw new Error("The parameter 'timescale' cannot be null.");
+        else if (timescale !== undefined)
+            url_ += "Timescale=" + encodeURIComponent("" + timescale) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -563,6 +567,12 @@ export enum Team {
     None = 0, 
     Resistance = 1, 
     Spy = 2, 
+}
+
+export enum Timescale {
+    AllTime = 0, 
+    Last7Days = 1, 
+    Last30Days = 2, 
 }
 
 export class PlayerListingDto implements IPlayerListingDto {

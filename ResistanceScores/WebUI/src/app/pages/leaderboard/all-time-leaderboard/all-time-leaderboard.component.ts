@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LeaderboardDto, LeaderboardClient, Team } from '../../../services/web-api.service.generated';
-import { take } from 'rxjs/operators';
+import { LeaderboardDto, LeaderboardClient, Team, Timescale } from '../../../services/web-api.service.generated';
+import { take, timeInterval } from 'rxjs/operators';
 
 @Component({
   selector: 'app-all-time-leaderboard',
@@ -15,14 +15,16 @@ export class AllTimeLeaderboardComponent implements OnInit {
   public isLoading = true;
   public errorOccurred = false;
   public teamFilter = Team.None;
+  public timescaleFilter = Timescale.AllTime;
   public Team = Team;
+  public Timescale = Timescale;
 
   ngOnInit() {
     this._leaderboardClient
-      .getLeaderboard(Team.None)
+      .getLeaderboard(Team.None, Timescale.AllTime)
       .pipe(take(1))
       .subscribe(
-        leaderboard => { this.leaderboard = leaderboard; this.isLoading = false; },
+        leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
         error => { this.errorOccurred = true; }
       )
   }
@@ -32,19 +34,36 @@ export class AllTimeLeaderboardComponent implements OnInit {
   }
 
   percentage(player: LeaderboardDto): number {
-    return 100 * player.wins / player.totalGames
+    return player.totalGames > 0
+      ? 100 * player.wins / player.totalGames
+      : 0;
   }
 
-  reload(team: Team): void {
+  updateTeamFilter(team: Team): void {
     if (team === this.teamFilter) {
-      return
+      return;
     }
 
+    this.reload(team, this.timescaleFilter);
+  }
+
+  updateTimescaleFilter(timescale: Timescale): void {
+    if (timescale === this.timescaleFilter) {
+      return;
+    }
+
+    this.reload(this.teamFilter, timescale);
+  }
+
+  private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.percentage(b) - this.percentage(a); }
+
+  private reload(team: Team, timescale: Timescale): void {
+
     this._leaderboardClient
-      .getLeaderboard(team)
+      .getLeaderboard(team, timescale)
       .pipe(take(1))
       .subscribe(
-        leaderboard => { this.leaderboard = leaderboard; this.teamFilter = team; },
+      leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.teamFilter = team; this.timescaleFilter = timescale; },
         error => { this.errorOccurred = true; }
       )
   }
