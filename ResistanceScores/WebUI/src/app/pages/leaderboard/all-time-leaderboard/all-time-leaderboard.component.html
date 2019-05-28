@@ -28,6 +28,15 @@
     <button (click)="updateTimescaleFilter(Timescale.AllTime)" [disabled]="timescaleFilter === Timescale.AllTime">All time</button>
     <button (click)="updateTimescaleFilter(Timescale.Last7Days)" [disabled]="timescaleFilter === Timescale.Last7Days">Last 7 days</button>
     <button (click)="updateTimescaleFilter(Timescale.Last30Days)" [disabled]="timescaleFilter === Timescale.Last30Days">Last 30 days</button>
+    <br />
+    <button (click)="updateNoOfPlayersFilter(4)" [disabled]="noOfPlayersFilter === 4">All sizes</button>
+    <button (click)="updateNoOfPlayersFilter(5)" [disabled]="noOfPlayersFilter === 5">5P</button>
+    <button (click)="updateNoOfPlayersFilter(6)" [disabled]="noOfPlayersFilter === 6">6P</button>
+    <button (click)="updateNoOfPlayersFilter(7)" [disabled]="noOfPlayersFilter === 7">7P</button>
+    <button (click)="updateNoOfPlayersFilter(8)" [disabled]="noOfPlayersFilter === 8">8P</button>
+    <button (click)="updateNoOfPlayersFilter(9)" [disabled]="noOfPlayersFilter === 9">9P</button>
+    <button (click)="updateNoOfPlayersFilter(10)" [disabled]="noOfPlayersFilter === 10">10P</button>
+    <button (click)="updateNoOfPlayersFilter(11)" [disabled]="noOfPlayersFilter === 11">11P</button>
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>

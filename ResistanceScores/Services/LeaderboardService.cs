@@ -53,6 +53,16 @@ namespace ResistanceScores.Services
                     break;
             }
 
+            Expression<Func<GamePlayer, bool>> noOfPlayersClause;
+            if (queryOptions.NoOfPlayers > 4) // 4 is the "All team sizes" option
+            {
+                noOfPlayersClause = g => g.Game.Players.Count == queryOptions.NoOfPlayers;
+            }
+            else
+            {
+                noOfPlayersClause = g => true;
+            }
+
             var leaderboard = await query
                 .Select(o => new LeaderboardDto
                 {
@@ -61,10 +71,12 @@ namespace ResistanceScores.Services
                     Wins = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
+                        .Where(noOfPlayersClause)
                         .Where(g => (g.WasResistance && g.Game.ResistanceWin) || (!g.WasResistance && !g.Game.ResistanceWin)).Count(),
                     TotalGames = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
+                        .Where(noOfPlayersClause)
                         .Count(),
                 })
                 .ToListAsync();

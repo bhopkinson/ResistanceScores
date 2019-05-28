@@ -89,7 +89,7 @@ export class LeaderboardClient {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
     }
 
-    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined): Observable<LeaderboardDto[] | null> {
+    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | null | undefined): Observable<LeaderboardDto[] | null> {
         let url_ = this.baseUrl + "/api/Leaderboard?";
         if (team === null)
             throw new Error("The parameter 'team' cannot be null.");
@@ -99,6 +99,8 @@ export class LeaderboardClient {
             throw new Error("The parameter 'timescale' cannot be null.");
         else if (timescale !== undefined)
             url_ += "Timescale=" + encodeURIComponent("" + timescale) + "&"; 
+        if (noOfPlayers !== undefined)
+            url_ += "NoOfPlayers=" + encodeURIComponent("" + noOfPlayers) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -140,6 +142,17 @@ export class LeaderboardClient {
                     result200!.push(LeaderboardDto.fromJS(item));
             }
             return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData400 && resultData400.constructor === Array) {
+                result400 = [] as any;
+                for (let item of resultData400)
+                    result400!.push(LeaderboardDto.fromJS(item));
+            }
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {

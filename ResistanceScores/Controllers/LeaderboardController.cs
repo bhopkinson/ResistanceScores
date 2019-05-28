@@ -22,8 +22,14 @@ namespace ResistanceScores.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<LeaderboardDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<LeaderboardDto>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboard([FromQuery] QueryOptions queryOptions)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var leaderboard = await _leaderboardService.GetLeaderboard(queryOptions);
             return Ok(leaderboard);
         }

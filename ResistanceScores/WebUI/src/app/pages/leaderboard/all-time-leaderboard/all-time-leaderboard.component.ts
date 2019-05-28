@@ -16,12 +16,13 @@ export class AllTimeLeaderboardComponent implements OnInit {
   public errorOccurred = false;
   public teamFilter = Team.None;
   public timescaleFilter = Timescale.AllTime;
+  public noOfPlayersFilter = 4;
   public Team = Team;
   public Timescale = Timescale;
 
   ngOnInit() {
     this._leaderboardClient
-      .getLeaderboard(Team.None, Timescale.AllTime)
+      .getLeaderboard(Team.None, Timescale.AllTime, 4)
       .pipe(take(1))
       .subscribe(
         leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
@@ -44,7 +45,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(team, this.timescaleFilter);
+    this.reload(team, this.timescaleFilter, this.noOfPlayersFilter);
   }
 
   updateTimescaleFilter(timescale: Timescale): void {
@@ -52,18 +53,31 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(this.teamFilter, timescale);
+    this.reload(this.teamFilter, timescale, this.noOfPlayersFilter);
+  }
+
+  updateNoOfPlayersFilter(noOfPlayers: number): void {
+    if (noOfPlayers === this.noOfPlayersFilter) {
+      return;
+    }
+
+    this.reload(this.teamFilter, this.timescaleFilter, noOfPlayers);
   }
 
   private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.percentage(b) - this.percentage(a); }
 
-  private reload(team: Team, timescale: Timescale): void {
+  private reload(team: Team, timescale: Timescale, noOfPlayers: number): void {
 
     this._leaderboardClient
-      .getLeaderboard(team, timescale)
+      .getLeaderboard(team, timescale, noOfPlayers)
       .pipe(take(1))
       .subscribe(
-      leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.teamFilter = team; this.timescaleFilter = timescale; },
+      leaderboard => {
+        this.leaderboard = leaderboard.sort(this.sortByPercentageFn);
+        this.teamFilter = team;
+        this.timescaleFilter = timescale;
+        this.noOfPlayersFilter = noOfPlayers;
+      },
         error => { this.errorOccurred = true; }
       )
   }
