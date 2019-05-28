@@ -26,9 +26,8 @@ namespace ResistanceScores
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSwaggerDocument();
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=ResistanceScores;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<AppDbContext>
-                (options => options.UseSqlServer(connection));
+                (options => options.UseSqlServer(Configuration["ConnectionString"]));
 
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
@@ -37,7 +36,7 @@ namespace ResistanceScores
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "WebUi/dist";
+                configuration.RootPath = "WebUi/dist/WebUi";
             });
         }
 

@@ -5,17 +5,17 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp\</SpaRoot>
+    <SpaRoot>WebUi\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>902e7d2c-1beb-46d3-aa9b-3f7f03e2d8cb</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.11" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.3.1" />
@@ -26,16 +26,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="WebUI\dist\**" />
+    <Compile Remove="Logs\**" />
+    <Compile Remove="WebUi\package-lock.json\**" />
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Compile Remove="WebUI\package-lock.json\**" />
     <Content Remove="$(SpaRoot)**" />
-    <Content Remove="WebUI\package-lock.json\**" />
+    <Content Remove="WebUI\dist\**" />
+    <Content Remove="Logs\**" />
+    <Content Remove="WebUi\package-lock.json\**" />
+    <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="WebUI\package-lock.json\**" />
-    <None Remove="WebUI\package-lock.json\**" />
+    <EmbeddedResource Remove="WebUI\dist\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="WebUI\dist\**" />
+    <None Remove="Logs\**" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
