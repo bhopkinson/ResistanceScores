@@ -19,6 +19,13 @@ namespace ResistanceScores
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    if (hostingContext.HostingEnvironment.IsProduction())
+                    {
+                        config.AddJsonFile("appsettings.Secrets.json", optional: false, reloadOnChange: true);
+                    }
+                })
                 .UseStartup<Startup>();
     }
 }
