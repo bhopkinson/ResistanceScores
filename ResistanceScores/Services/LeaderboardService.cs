@@ -63,6 +63,9 @@ namespace ResistanceScores.Services
                 noOfPlayersClause = g => true;
             }
 
+            Expression<Func<GamePlayer, bool>> asOfWhenClause;
+            asOfWhenClause = g => g.Game.Date.AddDays(queryOptions.AsOfWhen) < DateTime.Now;
+
             var leaderboard = await query
                 .Select(o => new LeaderboardDto
                 {
@@ -72,11 +75,13 @@ namespace ResistanceScores.Services
                         .Where(timescaleClause)
                         .Where(teamClause)
                         .Where(noOfPlayersClause)
+                        .Where(asOfWhenClause)
                         .Where(g => (g.WasResistance && g.Game.ResistanceWin) || (!g.WasResistance && !g.Game.ResistanceWin)).Count(),
                     TotalGames = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
                         .Where(noOfPlayersClause)
+                        .Where(asOfWhenClause)
                         .Count(),
                 })
                 .ToListAsync();

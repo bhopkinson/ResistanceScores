@@ -25,7 +25,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
 
   ngOnInit() {
     this._leaderboardClient
-      .getLeaderboard(Team.None, Timescale.AllTime, 4)
+      .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
       .pipe(take(1))
       .subscribe(
         leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
@@ -78,7 +78,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(team, this.timescaleFilter, this.noOfPlayersFilter);
+    this.reload(team, this.timescaleFilter, this.noOfPlayersFilter, this.asOfWhenFilter);
   }
 
   updateTimescaleFilter(timescale: Timescale): void {
@@ -86,7 +86,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(this.teamFilter, timescale, this.noOfPlayersFilter);
+    this.reload(this.teamFilter, timescale, this.noOfPlayersFilter, this.asOfWhenFilter);
   }
 
   updateNoOfPlayersFilter(noOfPlayers: number): void {
@@ -94,14 +94,22 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(this.teamFilter, this.timescaleFilter, noOfPlayers);
+    this.reload(this.teamFilter, this.timescaleFilter, noOfPlayers, this.asOfWhenFilter);
+  }
+
+  updateAsOfWhenFilter(asOfWhen: number): void {
+    if (asOfWhen === this.asOfWhenFilter) {
+      return;
+    }
+
+    this.reload(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, asOfWhen);
   }
 
   private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.percentage(b) - this.percentage(a); }
 
-  private reload(team: Team, timescale: Timescale, noOfPlayers: number): void {
+  private reload(team: Team, timescale: Timescale, noOfPlayers: number, asOfWhen: number): void {
     this._leaderboardClient
-      .getLeaderboard(team, timescale, noOfPlayers)
+      .getLeaderboard(team, timescale, noOfPlayers, asOfWhen)
       .pipe(take(1))
       .subscribe(
       leaderboard => {
@@ -109,6 +117,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
         this.teamFilter = team;
         this.timescaleFilter = timescale;
         this.noOfPlayersFilter = noOfPlayers;
+        this.asOfWhenFilter = asOfWhen;
       },
         error => { this.errorOccurred = true; }
       )

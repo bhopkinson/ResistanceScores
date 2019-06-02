@@ -38,6 +38,9 @@
     <button (click)="updateNoOfPlayersFilter(9)" [disabled]="noOfPlayersFilter === 9">9P</button>
     <button (click)="updateNoOfPlayersFilter(10)" [disabled]="noOfPlayersFilter === 10">10P</button>
     <button (click)="updateNoOfPlayersFilter(11)" [disabled]="noOfPlayersFilter === 11">11P</button>
+    <br />
+    <button (click)="updateAsOfWhenFilter(0)" [disabled]="asOfWhenFilter === 0">As of today</button>
+    <button (click)="updateAsOfWhenFilter(1)" [disabled]="asOfWhenFilter === 1">As of yesterday</button>
   </div>
   <p *ngIf="isLoading">Loading...</p>
   <h1>Game overview</h1>

@@ -89,7 +89,7 @@ export class LeaderboardClient {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
     }
 
-    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined): Observable<LeaderboardDto[] | null> {
+    getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined, asOfWhen: number | undefined): Observable<LeaderboardDto[] | null> {
         let url_ = this.baseUrl + "/api/Leaderboard?";
         if (team === null)
             throw new Error("The parameter 'team' cannot be null.");
@@ -103,6 +103,10 @@ export class LeaderboardClient {
             throw new Error("The parameter 'noOfPlayers' cannot be null.");
         else if (noOfPlayers !== undefined)
             url_ += "NoOfPlayers=" + encodeURIComponent("" + noOfPlayers) + "&"; 
+        if (asOfWhen === null)
+            throw new Error("The parameter 'asOfWhen' cannot be null.");
+        else if (asOfWhen !== undefined)
+            url_ += "AsOfWhen=" + encodeURIComponent("" + asOfWhen) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -162,6 +166,58 @@ export class LeaderboardClient {
             }));
         }
         return _observableOf<LeaderboardDto[] | null>(<any>null);
+    }
+
+    getGameLeaderboard(): Observable<GameOverviewDto[] | null> {
+        let url_ = this.baseUrl + "/api/Leaderboard/GameLeaderboard";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGameLeaderboard(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGameLeaderboard(<any>response_);
+                } catch (e) {
+                    return <Observable<GameOverviewDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GameOverviewDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetGameLeaderboard(response: HttpResponseBase): Observable<GameOverviewDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GameOverviewDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GameOverviewDto[] | null>(<any>null);
     }
 }
 
@@ -588,6 +644,46 @@ export enum Timescale {
     AllTime = 0, 
     Last7Days = 1, 
     Last30Days = 2, 
+}
+
+export class GameOverviewDto implements IGameOverviewDto {
+    resistanceWins!: number;
+    totalGames!: number;
+
+    constructor(data?: IGameOverviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.resistanceWins = data["resistanceWins"];
+            this.totalGames = data["totalGames"];
+        }
+    }
+
+    static fromJS(data: any): GameOverviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GameOverviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["resistanceWins"] = this.resistanceWins;
+        data["totalGames"] = this.totalGames;
+        return data; 
+    }
+}
+
+export interface IGameOverviewDto {
+    resistanceWins: number;
+    totalGames: number;
 }
 
 export class PlayerListingDto implements IPlayerListingDto {
