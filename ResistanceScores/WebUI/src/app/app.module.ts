@@ -14,6 +14,8 @@ import { PlayerCreateComponent } from './pages/player/player-edit/player-create.
 import { PlayerComponent } from './pages/player/player.component';
 import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
 import { AllTimeLeaderboardComponent } from './pages/leaderboard/all-time-leaderboard/all-time-leaderboard.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -36,7 +38,8 @@ export function getBaseUrl() {
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true})
   ],
   providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient],
   bootstrap: [AppComponent]
