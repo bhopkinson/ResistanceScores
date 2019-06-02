@@ -10,5 +10,6 @@ namespace ResistanceScores.Services
     public interface ILeaderboardService
     {
         Task<List<LeaderboardDto>> GetLeaderboard(QueryOptions queryOptions);
+        Task<List<GameOverviewDto>> GetGameLeaderboard(); // TODO: Refactor this
     }
 }

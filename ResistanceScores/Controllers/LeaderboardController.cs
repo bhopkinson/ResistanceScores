@@ -34,6 +34,15 @@ namespace ResistanceScores.Controllers
             return Ok(leaderboard);
         }
 
+        // TODO: Move to separate controller
+        [HttpGet("GameLeaderboard")]
+        [ProducesResponseType(typeof(List<GameOverviewDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GameOverviewDto>>> GetGameLeaderboard()
+        {
+            var leaderboard = await _leaderboardService.GetGameLeaderboard();
+            return Ok(leaderboard);
+        }
+
         //[HttpGet("{id}")]
         //[ProducesResponseType(typeof(GameDetailDto), StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status404NotFound)]

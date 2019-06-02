@@ -83,5 +83,59 @@ namespace ResistanceScores.Services
 
             return leaderboard;
         }
+
+        public async Task<List<GameOverviewDto>> GetGameLeaderboard()
+        {
+            var query = await _appDbContext
+                .Games
+                .Include(x => x.Players)
+                .ToListAsync();
+
+            var allPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Count,
+                ResistanceWins = query.Where(g => g.ResistanceWin).Count()
+            };
+            var fivePlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 5).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 5).Where(g => g.ResistanceWin).Count()
+            };
+            var sixPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 6).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 6).Where(g => g.ResistanceWin).Count()
+            };
+            var sevenPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 7).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 7).Where(g => g.ResistanceWin).Count()
+            };
+            var eightPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 8).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 8).Where(g => g.ResistanceWin).Count()
+            };
+            var ninePlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 9).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 9).Where(g => g.ResistanceWin).Count()
+            };
+            var tenPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 10).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 10).Where(g => g.ResistanceWin).Count()
+            };
+            var elevenPlayers = new GameOverviewDto
+            {
+                TotalGames = query.Where(g => g.Players.Count == 11).Count(),
+                ResistanceWins = query.Where(g => g.Players.Count == 11).Where(g => g.ResistanceWin).Count()
+            };
+
+            return new List<GameOverviewDto>
+            {
+                allPlayers,fivePlayers,sixPlayers,sevenPlayers,eightPlayers,ninePlayers,tenPlayers,elevenPlayers
+            };
+        }
     }
 }
