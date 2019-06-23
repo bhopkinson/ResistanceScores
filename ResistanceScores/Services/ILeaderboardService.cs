@@ -11,5 +11,6 @@ namespace ResistanceScores.Services
     {
         Task<List<LeaderboardDto>> GetLeaderboard(QueryOptions queryOptions);
         Task<List<GameOverviewDto>> GetGameLeaderboard(); // TODO: Refactor this
+        Task<GameListDto> GetDaySummary(); // TODO: Refactor this
     }
 }

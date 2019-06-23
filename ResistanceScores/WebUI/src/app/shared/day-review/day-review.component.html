@@ -1,0 +1,22 @@
+<div *ngIf="!errorOccurred">
+  <div *ngIf="!isLoading">
+
+
+    <div class="today-component component col m-2 m-md-4" *ngIf="summaryPlayers.length > 0 && summaryGames.length > 0">
+      <h1>Today</h1>
+      <table>
+        <tr *ngFor="let player of summaryPlayers;">
+          <th>{{player}}</th>
+          <td class="game-player-dot__container" *ngFor="let game of summaryGames">
+            <span class="game-player-dot"
+                  [class.game-player-dot--win]="summaryWinOrLoss(player, game) === true"
+                  [class.game-player-dot--loss]="summaryWinOrLoss(player, game) === false">
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <p *ngIf="isLoading">Loading...</p>
+</div>
+<p *ngIf="errorOccurred">An error has occurred</p>

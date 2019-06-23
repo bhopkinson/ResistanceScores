@@ -142,5 +142,31 @@ namespace ResistanceScores.Services
                 allPlayers,fivePlayers,sixPlayers,sevenPlayers,eightPlayers,ninePlayers,tenPlayers,elevenPlayers
             };
         }
+
+        public async Task<GameListDto> GetDaySummary()
+        {
+            var games = await _appDbContext
+            .Games
+            .Include(x => x.Players)
+            .ThenInclude(x => x.Player)
+            .Where(x => x.Date.AddDays(1) > DateTime.Now)
+            .Select(g => new GameSummaryDto
+            {
+                Players = g.Players.Select(p => new PlayerWinDto
+                {
+                    Player = p.Player.Initials,
+                    Win = (p.WasResistance && g.ResistanceWin) || (!p.WasResistance && !g.ResistanceWin)
+                }).ToList()
+            })
+            .ToListAsync();
+
+            var players = games.SelectMany(x => x.Players).Select(x => x.Player).Distinct().ToList();
+
+            return new GameListDto
+            {
+                Players = players,
+                Games = games
+            };
+        }
     }
 }

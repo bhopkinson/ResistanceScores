@@ -23,6 +23,7 @@ import { GameDetailComponent } from './pages/game/game-detail/game-detail.compon
 import { GameCreateComponent } from './pages/game/game-edit/game-create.component';
 import { ButtonMultiselectComponent } from './shared/button-multiselect/button-multiselect.component';
 import { ButtonMultiselectOptionComponent } from './shared/button-multiselect-option/button-multiselect-option.component';
+import { DayReviewComponent } from './shared/day-review/day-review.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -46,6 +47,7 @@ export function getBaseUrl() {
     GameCreateComponent,
     ButtonMultiselectComponent,
     ButtonMultiselectOptionComponent,
+    DayReviewComponent,
   ],
   imports: [
     BrowserModule,

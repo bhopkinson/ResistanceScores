@@ -1,0 +1,24 @@
+.game-player-dot {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 1rem;
+
+  &.game-player-dot--win {
+    background-color: green;
+  }
+
+  &.game-player-dot--loss {
+    background-color: red;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+td, th {
+  border-bottom: 1px solid grey;
+  text-align: center;
+}
+
