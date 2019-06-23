@@ -112,6 +112,14 @@ namespace ResistanceScores.Services
 
         public async Task UpdateGame(GameUpdateDto game)
         {
+            var dbGame = await _appDbContext.Games.SingleOrDefaultAsync(o => o.Id == game.Id);
+            dbGame.Id = game.Id;
+            dbGame.Date = game.Date;
+            dbGame.ResistanceWin = game.ResistanceWin;
+
+            _appDbContext.Games.Update(dbGame);
+
+            var dbGamePlayers = await _appDbContext.GamePlayers.Where(o => o.GameId == game.Id).ToListAsync();
             var newGamePlayers = game.Players.Select(o => new GamePlayer
             {
                 GameId = game.Id,
@@ -119,15 +127,6 @@ namespace ResistanceScores.Services
                 WasResistance = o.WasResistance,
             })
             .ToList();
-
-            var dbGame = await _appDbContext.Games.SingleOrDefaultAsync(o => o.Id == game.Id);
-            var dbGamePlayers = await _appDbContext.GamePlayers.Where(o => o.GameId == game.Id).ToListAsync();
-            
-            dbGame.Id = game.Id;
-            dbGame.Date = game.Date;
-            dbGame.ResistanceWin = game.ResistanceWin;
-
-            _appDbContext.Games.Update(dbGame);
 
             _appDbContext.GamePlayers.RemoveRange(dbGamePlayers);
             _appDbContext.GamePlayers.AddRange(newGamePlayers);
