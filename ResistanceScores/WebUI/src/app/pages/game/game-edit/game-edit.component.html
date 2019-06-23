@@ -1,0 +1,36 @@
+<h2><a [routerLink]="['games']">Back to games listing</a></h2>
+<h1>{{isNew ? 'Create' : 'Edit'}}</h1>
+<div *ngIf="!isLoading">
+
+  <h3>Date</h3>
+  <input type="date" [disabled]="isNew" [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="date = stringToDate($event)" />
+
+  <h3>Who is playing?</h3>
+  <app-button-multiselect [(ngModel)]="selectedPlayerIds">
+    <app-button-multiselect-option *ngFor="let player of players"
+                                   [value]="player.id"
+                                   cssUnselected="btn-outline-secondary"
+                                   cssSelected="btn-secondary">
+      {{player.initials}}
+    </app-button-multiselect-option>
+  </app-button-multiselect>
+
+  <h3>Who are the spies?</h3>
+  <app-button-multiselect [(ngModel)]="spyIds">
+    <app-button-multiselect-option *ngFor="let player of selectedPlayers"
+                                   [value]="player.id"
+                                   cssUnselected="btn-outline-secondary"
+                                   cssSelected="btn-danger">
+      {{player.initials}}
+    </app-button-multiselect-option>
+  </app-button-multiselect>
+
+  <h3>Which team won?</h3>
+  <button class="btn" [class.btn-outline-secondary]="resistanceWin !== true" [class.btn-primary]="resistanceWin === true" (click)="selectWinner(true)">Resistance</button>
+  <button class="btn" [class.btn-outline-secondary]="resistanceWin !== false" [class.btn-danger]="resistanceWin === false" (click)="selectWinner(false)">Spy</button>
+
+  <h3>Submit?</h3>
+  <button class="btn btn-outline-primary" (click)="submit()">Submit</button>
+  <button class="btn btn-outline-danger" *ngIf="!isNew" (click)="delete()">Delete</button>
+</div>
+<p *ngIf="isLoading">Loading...</p>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResistanceScores.Models.api
 {
-    public class GamePlayerUpdateDto
+    public class GamePlayerDetailDto
     {
         [Required]
         public int Id { get; set; }

@@ -9,11 +9,11 @@ namespace ResistanceScores.Services
 {
     public interface IGameService
     {
-        //Task<List<GameListingDto>> GetGames();
-        //Task<GameDetailDto> GetGame(int id);
+        Task<List<GameListingDto>> GetGames();
+        Task<GameDetailDto> GetGame(int id);
         Task<int> CreateGame(GameUpdateDto game);
         Task CreateMultipleGames(List<GameUpdateDto> games);
-        //Task UpdateGame(GameUpdateDto game);
-        //Task DeleteGame(int id);
+        Task UpdateGame(GameUpdateDto game);
+        Task DeleteGame(int id);
     }
 }

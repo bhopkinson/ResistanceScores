@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace ResistanceScores.Models.api
 {
-    public class GamePlayerUpdateDto
+    public class GameDetailDto
     {
-        [Required]
         public int Id { get; set; }
 
-        [Required]
-        public bool WasResistance { get; set; }
+        public DateTimeOffset Date { get; set; }
+
+        public bool ResistanceWin { get; set; }
+
+        public List<GamePlayerDetailDto> Players { get; set; }
     }
 }

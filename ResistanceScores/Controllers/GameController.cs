@@ -21,38 +21,38 @@ namespace ResistanceScores.Controllers
             _gameService = gameService ?? throw new ArgumentNullException(nameof(gameService));
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(typeof(List<GameDetailDto>), StatusCodes.Status200OK)]
-        //public async Task<ActionResult<List<GameListingDto>>> GetGames()
-        //{
-        //    var games = await _gameService.GetGames();
-        //    return Ok(games);
-        //}
+        [HttpGet]
+        [ProducesResponseType(typeof(List<GameListingDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GameListingDto>>> GetGames()
+        {
+            var games = await _gameService.GetGames();
+            return Ok(games);
+        }
 
-        //[HttpGet("{id}")]
-        //[ProducesResponseType(typeof(GameDetailDto), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public async Task<ActionResult<GameDetailDto>> GetGame(int id)
-        //{
-        //    var game = await _gameService.GetGame(id);
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(GameDetailDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GameDetailDto>> GetGame(int id)
+        {
+            var game = await _gameService.GetGame(id);
 
-        //    if (game == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (game == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok(game);
-        //}
-
-        //[HttpPost]
-        //[ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        //public async Task<ActionResult<int>> CreateGame([FromBody] GameUpdateDto game)
-        //{
-        //    var id = await _gameService.CreateGame(game);
-        //    return Ok(id);
-        //}
+            return Ok(game);
+        }
 
         [HttpPost]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        public async Task<ActionResult<int>> CreateGame([FromBody] GameUpdateDto game)
+        {
+            var id = await _gameService.CreateGame(game);
+            return Ok(id);
+        }
+
+        [HttpPost("CreateMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> CreateMultipleGames([FromBody] List<GameUpdateDto> games)
         {
@@ -60,20 +60,20 @@ namespace ResistanceScores.Controllers
             return Ok();
         }
 
-        //[HttpPut]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //public async Task<ActionResult> UpdateGame([FromBody] GameUpdateDto game)
-        //{
-        //    await _gameService.UpdateGame(game);
-        //    return NoContent();
-        //}
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> UpdateGame([FromBody] GameUpdateDto game)
+        {
+            await _gameService.UpdateGame(game);
+            return NoContent();
+        }
 
-        //[HttpDelete("{id}")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //public async Task<ActionResult> DeleteGame(int id)
-        //{
-        //    await _gameService.DeleteGame(id);
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteGame(int id)
+        {
+            await _gameService.DeleteGame(id);
+            return NoContent();
+        }
     }
 }
