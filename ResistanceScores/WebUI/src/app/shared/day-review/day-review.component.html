@@ -1,10 +1,7 @@
 <div *ngIf="!errorOccurred">
   <div *ngIf="!isLoading">
-
-
-    <div class="today-component component col m-2 m-md-4" *ngIf="summaryPlayers.length > 0 && summaryGames.length > 0">
       <h1>Today</h1>
-      <table>
+      <table *ngIf="summaryGames.length > 0">
         <tr *ngFor="let player of summaryPlayers;">
           <th>{{player}}</th>
           <td class="game-player-dot__container" *ngFor="let game of summaryGames">
@@ -15,7 +12,7 @@
           </td>
         </tr>
       </table>
-    </div>
+      <p *ngIf="summaryGames.length === 0">No games played today</p>
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>

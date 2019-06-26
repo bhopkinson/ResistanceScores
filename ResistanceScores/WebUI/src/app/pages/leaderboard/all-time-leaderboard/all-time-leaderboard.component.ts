@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LeaderboardDto, LeaderboardClient, Team, Timescale, GameOverviewDto } from '../../../services/web-api.service.generated';
+import { LeaderboardDto, LeaderboardClient, Team, Timescale, GameOverviewDto, GameSummaryDto, GameListDto } from '../../../services/web-api.service.generated';
 import { take, timeInterval } from 'rxjs/operators';
 import { Constants } from '../../../constants';
 
@@ -14,12 +14,14 @@ export class AllTimeLeaderboardComponent implements OnInit {
 
   public leaderboard: LeaderboardDto[] = [];
   public gameOverview: GameOverviewDto[] = [];
+  public summaryPlayers: string[] = [];
+  public summaryGames: GameSummaryDto[] = [];
   public isLoading = true;
   public errorOccurred = false;
-  public teamFilter = Team.None;
-  public timescaleFilter = Timescale.AllTime;
-  public noOfPlayersFilter = 4;
-  public asOfWhenFilter = 0;
+  private _teamFilter = Team.None;
+  private _timescaleFilter = Timescale.AllTime;
+  private _noOfPlayersFilter = 4;
+  private _asOfWhenFilter = 0;
   public Team = Team;
   public Timescale = Timescale;
 
@@ -38,7 +40,14 @@ export class AllTimeLeaderboardComponent implements OnInit {
       .subscribe(
         overview => { this.gameOverview = overview;},
         error => { this.errorOccurred = true; }
-      )
+    )
+
+    this._leaderboardClient
+      .getDaySummary()
+      .pipe(take(1))
+      .subscribe(
+      summary => { this.summaryPlayers = summary.players; this.summaryGames = summary.games; },
+        error => { this.errorOccurred = true; })
   }
 
   losses(player: LeaderboardDto): number {
@@ -78,46 +87,74 @@ export class AllTimeLeaderboardComponent implements OnInit {
       return;
     }
 
-    this.reload(team, this.timescaleFilter, this.noOfPlayersFilter, this.asOfWhenFilter);
+    this.reload();
   }
 
-  updateTimescaleFilter(timescale: Timescale): void {
-    if (timescale === this.timescaleFilter) {
+  get teamFilter(): number {
+    return this._teamFilter;
+  }
+
+  set teamFilter(value: number) {
+    if (value === this._teamFilter) {
       return;
     }
 
-    this.reload(this.teamFilter, timescale, this.noOfPlayersFilter, this.asOfWhenFilter);
+    this._teamFilter = value;
+
+    this.reload();
   }
 
-  updateNoOfPlayersFilter(noOfPlayers: number): void {
-    if (noOfPlayers === this.noOfPlayersFilter) {
+  get timescaleFilter(): number {
+    return this._timescaleFilter;
+  }
+
+  set timescaleFilter(value: number) {
+    if (value === this._timescaleFilter) {
       return;
     }
 
-    this.reload(this.teamFilter, this.timescaleFilter, noOfPlayers, this.asOfWhenFilter);
+    this._timescaleFilter = value;
+
+    this.reload();
   }
 
-  updateAsOfWhenFilter(asOfWhen: number): void {
-    if (asOfWhen === this.asOfWhenFilter) {
+  get noOfPlayersFilter(): number {
+    return this._noOfPlayersFilter;
+  }
+
+  set noOfPlayersFilter(value: number) {
+    if (value === this._noOfPlayersFilter) {
       return;
     }
 
-    this.reload(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, asOfWhen);
+    this._noOfPlayersFilter = value;
+
+    this.reload();
+  }
+
+  get asOfWhenFilter(): number {
+    return this._asOfWhenFilter;
+  }
+
+  set asOfWhenFilter(value: number) {
+    if (value === this._asOfWhenFilter) {
+      return;
+    }
+
+    this._asOfWhenFilter = value;
+
+    this.reload();
   }
 
   private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.percentage(b) - this.percentage(a); }
 
-  private reload(team: Team, timescale: Timescale, noOfPlayers: number, asOfWhen: number): void {
+  private reload(): void {
     this._leaderboardClient
-      .getLeaderboard(team, timescale, noOfPlayers, asOfWhen)
+      .getLeaderboard(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, this.asOfWhenFilter)
       .pipe(take(1))
       .subscribe(
       leaderboard => {
         this.leaderboard = leaderboard.sort(this.sortByPercentageFn);
-        this.teamFilter = team;
-        this.timescaleFilter = timescale;
-        this.noOfPlayersFilter = noOfPlayers;
-        this.asOfWhenFilter = asOfWhen;
       },
         error => { this.errorOccurred = true; }
       )

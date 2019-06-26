@@ -1,18 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --subtle-purple: #f0f0fe;
+  --subtle-purple-light: #f8f8fe;
+  --grey-xxlight: #F0F0F0;
+  --grey-light: #EEEEEE;
+  --grey: #CCCCCC;
+  --grey-dark: #999999;
+  --grey-xdark: #666666;
+  --grey-xxdark: #333333;
+}
+
 body {
-  background-color: #fefefe;
+  background-color: #ffffff;
 }
 
 .component {
   display: inline-block;
   margin: 5px;
-  border: 1px solid grey;
+  border: 1px solid var(--grey-xxlight);
   border-radius: 15px;
   padding: 0 0 25px;
-
-  h1 {
-    text-align: center;
-  }
+  text-align: center;
+  box-shadow: 5px 5px 15px var(--grey);
+  color: var(--grey-xxdark);
 }
 
 table {
@@ -21,5 +31,68 @@ table {
 
 td, th {
   border-bottom: 1px solid grey;
-  text-align: center;
+  text-align: center !important;
 }
+
+.button-bar {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px dashed lightgrey;
+
+  &:first-of-type {
+    border-top: 1px dashed lightgrey;
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid grey;
+  }
+
+  .button-bar_button {
+    flex-grow: 1;
+    width: 25%;
+  }
+}
+
+app-button-select {
+  display: flex;
+  flex-wrap: wrap;
+
+  &:last-of-type {
+    border-bottom: 1px solid grey;
+  }
+}
+
+app-button-select-option {
+  border: 1px solid var(--grey);
+  color: #cccccc;
+  flex-grow: 1;
+  text-align: center;
+  min-height: 2rem;
+  border-radius: 5px;
+  padding: 0.5rem;
+
+  &.selected {
+    border-color: var(--grey-dark);
+    color: var(--grey-xdark);
+    background-color: var(--subtle-purple-light);
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--subtle-purple);
+  }
+}
+/*app-button-select-option.selected {
+  border-color: #333333;
+  color: #333333;
+  background-color: #f0f0fe;*/
+
+/*pp-button-select-option {
+  border: 1px solid #cccccc;
+  color: #cccccc;
+  background-color: #ff3ff;
+  flex-grow: 1;
+  text-align: center;
+  min-height: 2rem;
+  border-radius: 5px;
+  padding: 0.5rem;*/

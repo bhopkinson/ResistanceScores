@@ -3,7 +3,7 @@ import { GameSummaryDto, LeaderboardClient } from '../../services/web-api.servic
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-day-review',
+  selector: '[app-day-review]',
   templateUrl: './day-review.component.html',
   styleUrls: ['./day-review.component.scss']
 })
