@@ -14,8 +14,6 @@ export class AllTimeLeaderboardComponent implements OnInit {
 
   public leaderboard: LeaderboardDto[] = [];
   public gameOverview: GameOverviewDto[] = [];
-  public summaryPlayers: string[] = [];
-  public summaryGames: GameSummaryDto[] = [];
   public isLoading = true;
   public errorOccurred = false;
   private _teamFilter = Team.None;
@@ -27,7 +25,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
 
   ngOnInit() {
     this._leaderboardClient
-      .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
+      .getLeaderboard(Team.None, Timescale.AllTime, 4, 'f' as any as number)
       .pipe(take(1))
       .subscribe(
         leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
@@ -41,13 +39,6 @@ export class AllTimeLeaderboardComponent implements OnInit {
         overview => { this.gameOverview = overview;},
         error => { this.errorOccurred = true; }
     )
-
-    this._leaderboardClient
-      .getDaySummary()
-      .pipe(take(1))
-      .subscribe(
-      summary => { this.summaryPlayers = summary.players; this.summaryGames = summary.games; },
-        error => { this.errorOccurred = true; })
   }
 
   losses(player: LeaderboardDto): number {
@@ -144,6 +135,10 @@ export class AllTimeLeaderboardComponent implements OnInit {
     this._asOfWhenFilter = value;
 
     this.reload();
+  }
+
+  refresh() {
+    window.location.reload();
   }
 
   private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.percentage(b) - this.percentage(a); }

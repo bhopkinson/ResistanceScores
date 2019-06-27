@@ -79,4 +79,7 @@
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>
-<p *ngIf="errorOccurred">An error has occurred</p>
+<div *ngIf="errorOccurred">
+  <p> An error has occurred</p>
+  <p style="color:dodgerblue" (click)="refresh()">Click here to refresh.</p>
+</div>
