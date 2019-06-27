@@ -22,3 +22,34 @@ td, th {
   text-align: center;
 }
 
+.title {
+  display: flex;
+
+  button {
+    height: 2rem;
+    width: 2rem;
+    margin: auto 8px auto;
+    border: 1px solid var(--grey);
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    color: var(--grey);
+
+    &:hover {
+      background-color: var(--grey-light);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &[disabled] {
+      background-color: #FFFFFF;
+      border-color: var(--grey-xxlight);
+      color: var(--grey-xxlight);
+    }
+  }
+
+  h1 {
+    flex-grow: 1;
+  }
+}

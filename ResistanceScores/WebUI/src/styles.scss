@@ -14,15 +14,25 @@ body {
   background-color: #ffffff;
 }
 
+.component-multi {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
 .component {
   display: inline-block;
-  margin: 5px;
-  border: 1px solid var(--grey-xxlight);
-  border-radius: 15px;
+  margin-bottom: 20px;
   padding: 0 0 25px;
   text-align: center;
   box-shadow: 5px 5px 15px var(--grey);
   color: var(--grey-xxdark);
+  min-width: 300px;
+  flex-grow: 1;
+}
+
+.leaderboard-component {
+  flex-grow: 5;
 }
 
 table {
@@ -82,6 +92,26 @@ app-button-select-option {
     background-color: var(--subtle-purple);
   }
 }
+
+@media (min-width: 576px) {
+  .component-multi{
+    max-width: 80%;
+    margin: 20px auto;
+  }
+
+  .component {
+    display: inline-block;
+    margin-right: 20px;
+    border: 1px solid var(--grey-xxlight);
+    border-radius: 15px;
+    padding: 0 0 25px;
+    text-align: center;
+    box-shadow: 5px 5px 15px var(--grey);
+    color: var(--grey-xxdark);
+    min-width: 300px;
+  }
+}
+
 /*app-button-select-option.selected {
   border-color: #333333;
   color: #333333;

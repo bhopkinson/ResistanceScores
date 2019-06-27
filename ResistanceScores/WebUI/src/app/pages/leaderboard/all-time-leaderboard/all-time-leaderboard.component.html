@@ -1,7 +1,7 @@
 <div *ngIf="!errorOccurred">
-  <div *ngIf="!isLoading" class="container">
-    <div class="component-multi row">
-      <div class="leaderboard-component component col px-0 m-2 m-md-4">
+  <div *ngIf="!isLoading">
+    <div class="component-multi">
+      <div class="leaderboard-component component">
         <h1>Leaderboard</h1>
         <table>
           <thead>
@@ -48,9 +48,9 @@
 
       </div>
 
-      <div app-day-review class="component col px-0 m-2 m-md-4"></div>
+      <app-day-review class="component"></app-day-review>
 
-      <div class="game-overview-component component col px-0 m-2 m-md-4">
+      <div class="game-overview-component component">
         <h1>Game overview</h1>
         <table>
           <thead>
