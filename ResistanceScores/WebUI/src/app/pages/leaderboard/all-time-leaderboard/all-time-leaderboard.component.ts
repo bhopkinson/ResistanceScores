@@ -25,7 +25,7 @@ export class AllTimeLeaderboardComponent implements OnInit {
 
   ngOnInit() {
     this._leaderboardClient
-      .getLeaderboard(Team.None, Timescale.AllTime, 4, 'f' as any as number)
+      .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
       .pipe(take(1))
       .subscribe(
         leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
