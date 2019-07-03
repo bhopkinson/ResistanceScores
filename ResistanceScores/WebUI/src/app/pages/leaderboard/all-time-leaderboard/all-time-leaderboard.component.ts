@@ -23,6 +23,8 @@ export class AllTimeLeaderboardComponent implements OnInit {
   public Team = Team;
   public Timescale = Timescale;
 
+  public clickCount = 0;
+
   ngOnInit() {
     this._leaderboardClient
       .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
@@ -135,6 +137,10 @@ export class AllTimeLeaderboardComponent implements OnInit {
     this._asOfWhenFilter = value;
 
     this.reload();
+  }
+
+  clickCounter(): void {
+    this.clickCount++;
   }
 
   refresh() {

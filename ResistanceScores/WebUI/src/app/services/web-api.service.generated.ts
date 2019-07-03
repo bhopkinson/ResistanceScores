@@ -22,7 +22,7 @@ export class GameClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getGames(): Observable<GameListingDto[] | null> {
@@ -336,6 +336,70 @@ export class GameClient {
 }
 
 @Injectable()
+export class GraphClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    get(): Observable<GraphDto[] | null> {
+        let url_ = this.baseUrl + "/api/Graph";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GraphDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GraphDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GraphDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GraphDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GraphDto[] | null>(<any>null);
+    }
+}
+
+@Injectable()
 export class LeaderboardClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -343,7 +407,7 @@ export class LeaderboardClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined, asOfWhen: number | undefined): Observable<LeaderboardDto[] | null> {
@@ -477,8 +541,12 @@ export class LeaderboardClient {
         return _observableOf<GameOverviewDto[] | null>(<any>null);
     }
 
-    getDaySummary(): Observable<GameListDto | null> {
-        let url_ = this.baseUrl + "/api/Leaderboard/DaySummary";
+    getDaySummary(daysAgo: number | undefined): Observable<GameListDto | null> {
+        let url_ = this.baseUrl + "/api/Leaderboard/DaySummary?";
+        if (daysAgo === null)
+            throw new Error("The parameter 'daysAgo' cannot be null.");
+        else if (daysAgo !== undefined)
+            url_ += "daysAgo=" + encodeURIComponent("" + daysAgo) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -534,7 +602,7 @@ export class PlayerClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44378";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getPlayers(): Observable<PlayerListingDto[] | null> {
@@ -910,6 +978,7 @@ export interface IGameDetailDto {
 export class GamePlayerDetailDto implements IGamePlayerDetailDto {
     id!: number;
     wasResistance!: boolean;
+    role!: Role;
 
     constructor(data?: IGamePlayerDetailDto) {
         if (data) {
@@ -924,6 +993,7 @@ export class GamePlayerDetailDto implements IGamePlayerDetailDto {
         if (data) {
             this.id = data["id"];
             this.wasResistance = data["wasResistance"];
+            this.role = data["role"];
         }
     }
 
@@ -938,6 +1008,7 @@ export class GamePlayerDetailDto implements IGamePlayerDetailDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["wasResistance"] = this.wasResistance;
+        data["role"] = this.role;
         return data; 
     }
 }
@@ -945,6 +1016,16 @@ export class GamePlayerDetailDto implements IGamePlayerDetailDto {
 export interface IGamePlayerDetailDto {
     id: number;
     wasResistance: boolean;
+    role: Role;
+}
+
+export enum Role {
+    None = 0, 
+    Regular = 1, 
+    Hunter = 2, 
+    Chief = 3, 
+    Dummy = 4, 
+    Defector = 5, 
 }
 
 export class ProblemDetails implements IProblemDetails {
@@ -1061,6 +1142,7 @@ export interface IGameUpdateDto {
 export class GamePlayerUpdateDto implements IGamePlayerUpdateDto {
     id!: number;
     wasResistance!: boolean;
+    role!: Role;
 
     constructor(data?: IGamePlayerUpdateDto) {
         if (data) {
@@ -1075,6 +1157,7 @@ export class GamePlayerUpdateDto implements IGamePlayerUpdateDto {
         if (data) {
             this.id = data["id"];
             this.wasResistance = data["wasResistance"];
+            this.role = data["role"];
         }
     }
 
@@ -1089,6 +1172,7 @@ export class GamePlayerUpdateDto implements IGamePlayerUpdateDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["wasResistance"] = this.wasResistance;
+        data["role"] = this.role;
         return data; 
     }
 }
@@ -1096,6 +1180,151 @@ export class GamePlayerUpdateDto implements IGamePlayerUpdateDto {
 export interface IGamePlayerUpdateDto {
     id: number;
     wasResistance: boolean;
+    role: Role;
+}
+
+export class GraphDto implements IGraphDto {
+    graphPlayers?: GraphPlayerDto[] | undefined;
+    firstGameId!: number;
+    lastGameId!: number;
+
+    constructor(data?: IGraphDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (data["graphPlayers"] && data["graphPlayers"].constructor === Array) {
+                this.graphPlayers = [] as any;
+                for (let item of data["graphPlayers"])
+                    this.graphPlayers!.push(GraphPlayerDto.fromJS(item));
+            }
+            this.firstGameId = data["firstGameId"];
+            this.lastGameId = data["lastGameId"];
+        }
+    }
+
+    static fromJS(data: any): GraphDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GraphDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.graphPlayers && this.graphPlayers.constructor === Array) {
+            data["graphPlayers"] = [];
+            for (let item of this.graphPlayers)
+                data["graphPlayers"].push(item.toJSON());
+        }
+        data["firstGameId"] = this.firstGameId;
+        data["lastGameId"] = this.lastGameId;
+        return data; 
+    }
+}
+
+export interface IGraphDto {
+    graphPlayers?: GraphPlayerDto[] | undefined;
+    firstGameId: number;
+    lastGameId: number;
+}
+
+export class GraphPlayerDto implements IGraphPlayerDto {
+    playerId!: number;
+    graphPoints?: GraphPointDto[] | undefined;
+
+    constructor(data?: IGraphPlayerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.playerId = data["playerId"];
+            if (data["graphPoints"] && data["graphPoints"].constructor === Array) {
+                this.graphPoints = [] as any;
+                for (let item of data["graphPoints"])
+                    this.graphPoints!.push(GraphPointDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GraphPlayerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GraphPlayerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["playerId"] = this.playerId;
+        if (this.graphPoints && this.graphPoints.constructor === Array) {
+            data["graphPoints"] = [];
+            for (let item of this.graphPoints)
+                data["graphPoints"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGraphPlayerDto {
+    playerId: number;
+    graphPoints?: GraphPointDto[] | undefined;
+}
+
+export class GraphPointDto implements IGraphPointDto {
+    wins!: number;
+    totalGames!: number;
+    gameId!: number;
+
+    constructor(data?: IGraphPointDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.wins = data["wins"];
+            this.totalGames = data["totalGames"];
+            this.gameId = data["gameId"];
+        }
+    }
+
+    static fromJS(data: any): GraphPointDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GraphPointDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["wins"] = this.wins;
+        data["totalGames"] = this.totalGames;
+        data["gameId"] = this.gameId;
+        return data; 
+    }
+}
+
+export interface IGraphPointDto {
+    wins: number;
+    totalGames: number;
+    gameId: number;
 }
 
 export class LeaderboardDto implements ILeaderboardDto {

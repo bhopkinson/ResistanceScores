@@ -143,13 +143,14 @@ namespace ResistanceScores.Services
             };
         }
 
-        public async Task<GameListDto> GetDaySummary()
+        public async Task<GameListDto> GetDaySummary(int daysAgo)
         {
             var games = await _appDbContext
             .Games
             .Include(x => x.Players)
             .ThenInclude(x => x.Player)
-            .Where(x => x.Date.AddDays(1) > DateTime.Now)
+            .Where(x => x.Date.AddDays(daysAgo + 1) > DateTime.Now)
+            .Where(x => x.Date.AddDays(daysAgo) <= DateTime.Now)
             .Select(g => new GameSummaryDto
             {
                 Players = g.Players.Select(p => new PlayerWinDto

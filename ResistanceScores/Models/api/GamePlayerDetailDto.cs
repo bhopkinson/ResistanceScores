@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResistanceScores.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace ResistanceScores.Models.api
 
         [Required]
         public bool WasResistance { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }

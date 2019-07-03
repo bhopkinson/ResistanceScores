@@ -1,5 +1,6 @@
 <div *ngIf="!errorOccurred">
   <div *ngIf="!isLoading">
+    <p><a [routerLink]="['/']">Back to Main Page</a></p>
     <p><a [routerLink]="['/games/create']">Create new game</a></p>
     <table>
       <thead>

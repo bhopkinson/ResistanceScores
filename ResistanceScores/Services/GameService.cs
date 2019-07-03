@@ -26,7 +26,8 @@ namespace ResistanceScores.Services
             var newGamePlayers = game.Players.Select(o => new GamePlayer
             {
                 WasResistance = o.WasResistance,
-                Player = players.Where(p => p.Id == o.Id).SingleOrDefault()
+                Player = players.Where(p => p.Id == o.Id).SingleOrDefault(),
+                Role = o.Role
             })
             .ToList();
 
@@ -90,7 +91,8 @@ namespace ResistanceScores.Services
                 Players = o.Players.Select(p => new GamePlayerDetailDto
                 {
                     Id = p.PlayerId,
-                    WasResistance = p.WasResistance
+                    WasResistance = p.WasResistance,
+                    Role = p.Role
                 }).ToList()
             })
             .SingleOrDefaultAsync(o => o.Id == id);

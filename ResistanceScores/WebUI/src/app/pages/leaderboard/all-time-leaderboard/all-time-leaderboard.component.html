@@ -60,7 +60,7 @@
               <th>Spy wins</th>
               <th>Total games</th>
               <th>% Res Win</th>
-              <th>% Win</th>
+              <th (click)="clickCounter()">% Win</th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +75,12 @@
           </tbody>
         </table>
       </div>
+
+      <app-percentage-graph class="component"></app-percentage-graph>
     </div>
+  </div>
+  <div *ngIf="clickCount > 5">
+    <p><a [routerLink]="['/games']">To Games -></a></p>
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>

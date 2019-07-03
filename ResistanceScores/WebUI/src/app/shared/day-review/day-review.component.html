@@ -1,18 +1,22 @@
 <div *ngIf="!errorOccurred">
+  <div class="title">
+    <button (click)="previousDay()"><</button>
+    <h1>{{daysAgoString}}</h1>
+    <button [disabled]="daysAgo <= 0" (click)="nextDay()">></button>
+  </div>
   <div *ngIf="!isLoading">
-      <h1>Today</h1>
-      <table *ngIf="summaryGames.length > 0">
-        <tr *ngFor="let player of summaryPlayers;">
-          <th>{{player}}</th>
-          <td class="game-player-dot__container" *ngFor="let game of summaryGames">
-            <span class="game-player-dot"
-                  [class.game-player-dot--win]="summaryWinOrLoss(player, game) === true"
-                  [class.game-player-dot--loss]="summaryWinOrLoss(player, game) === false">
-            </span>
-          </td>
-        </tr>
-      </table>
-      <p *ngIf="summaryGames.length === 0">No games played today</p>
+    <table *ngIf="summaryGames.length > 0">
+      <tr *ngFor="let player of summaryPlayers;">
+        <th>{{player}}</th>
+        <td class="game-player-dot__container" *ngFor="let game of summaryGames">
+          <span class="game-player-dot"
+                [class.game-player-dot--win]="summaryWinOrLoss(player, game) === true"
+                [class.game-player-dot--loss]="summaryWinOrLoss(player, game) === false">
+          </span>
+        </td>
+      </tr>
+    </table>
+    <p *ngIf="summaryGames.length === 0">No games played {{daysAgoString.toLowerCase()}}</p>
   </div>
   <p *ngIf="isLoading">Loading...</p>
 </div>

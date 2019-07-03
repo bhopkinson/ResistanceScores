@@ -46,9 +46,9 @@ namespace ResistanceScores.Controllers
         // TODO: Move to separate controller
         [HttpGet("DaySummary")]
         [ProducesResponseType(typeof(GameListDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GameListDto>> GetDaySummary()
+        public async Task<ActionResult<GameListDto>> GetDaySummary(int daysAgo)
         {
-            var leaderboard = await _leaderboardService.GetDaySummary();
+            var leaderboard = await _leaderboardService.GetDaySummary(daysAgo);
             return Ok(leaderboard);
         }
 

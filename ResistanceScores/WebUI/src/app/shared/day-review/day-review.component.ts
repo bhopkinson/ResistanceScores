@@ -3,7 +3,7 @@ import { GameSummaryDto, LeaderboardClient } from '../../services/web-api.servic
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: '[app-day-review]',
+  selector: 'app-day-review',
   templateUrl: './day-review.component.html',
   styleUrls: ['./day-review.component.scss']
 })
@@ -16,16 +16,10 @@ export class DayReviewComponent implements OnInit {
   public isLoading = true;
   public errorOccurred = false
 
+  public daysAgo = 0;
+
   ngOnInit() {
-    this._leaderboardClient
-      .getDaySummary()
-      .pipe(take(1))
-      .subscribe(
-        summary => {
-          this.summaryPlayers = summary.players;
-          this.summaryGames = summary.games;
-          this.isLoading = false;},
-        error => { this.errorOccurred = true; })
+    this.load();
   }
 
   summaryWinOrLoss(player: string, game: GameSummaryDto): boolean | null {
@@ -38,4 +32,38 @@ export class DayReviewComponent implements OnInit {
     return gamePlayer.win;
   }
 
+  previousDay() {
+    this.daysAgo++;
+    this.load();
+  }
+
+  nextDay() {
+    this.daysAgo--;
+    this.load();
+  }
+
+  get daysAgoString(): string {
+    switch (this.daysAgo) {
+      case 0:
+        return 'Today';
+      case 1:
+        return 'Yesterday';
+      default:
+        return `${this.daysAgo} days ago`
+    }
+  }
+
+  private load(): void {
+    this.isLoading = true;
+    this._leaderboardClient
+      .getDaySummary(this.daysAgo)
+      .pipe(take(1))
+      .subscribe(
+        summary => {
+          this.summaryPlayers = summary.players;
+          this.summaryGames = summary.games;
+          this.isLoading = false;
+        },
+        error => { this.errorOccurred = true; })
+  }
 }

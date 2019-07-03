@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient } from './services/web-api.service.generated';
+import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient, GraphClient } from './services/web-api.service.generated';
 import { PlayerEditComponent } from './pages/player/player-edit/player-edit.component';
 import { PlayerDetailComponent } from './pages/player/player-detail/player-detail.component';
 import { PlayerListingComponent } from './pages/player/player-listing/player-listing.component';
@@ -26,6 +26,8 @@ import { ButtonMultiselectOptionComponent } from './shared/button-multiselect-op
 import { DayReviewComponent } from './shared/day-review/day-review.component';
 import { ButtonSelectComponent } from './shared/button-select/button-select.component';
 import { ButtonSelectOptionComponent } from './shared/button-select-option/button-select-option.component';
+import { PercentageGraphComponent } from './shared/percentage-graph/percentage-graph.component';
+import { ChartsModule } from 'ng2-charts';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -52,6 +54,7 @@ export function getBaseUrl() {
     DayReviewComponent,
     ButtonSelectComponent,
     ButtonSelectOptionComponent,
+    PercentageGraphComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,9 +62,10 @@ export function getBaseUrl() {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ChartsModule
   ],
-  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient],
+  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient, GraphClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
