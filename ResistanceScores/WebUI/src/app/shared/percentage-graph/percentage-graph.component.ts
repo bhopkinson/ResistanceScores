@@ -16,7 +16,7 @@ export class PercentageGraphComponent implements OnInit {
   isLoading = true;
   errorOccurred = false;
 
-  graphData: GraphDto[] = [];
+  graphData: GraphDto;
 
   ngOnInit() {
     this._graphClient.get()

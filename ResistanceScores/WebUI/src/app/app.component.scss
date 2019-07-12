@@ -1,0 +1,17 @@
+.graph {
+  width: 50%;
+
+  .gridline {
+    stroke: grey;
+    stroke-width: 0.1px;
+
+    &.y-gridline {
+      stroke: lightgray;
+    }
+  }
+
+  .datapath {
+    stroke: green;
+    fill: none;
+  }
+}

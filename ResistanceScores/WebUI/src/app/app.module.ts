@@ -28,6 +28,10 @@ import { ButtonSelectComponent } from './shared/button-select/button-select.comp
 import { ButtonSelectOptionComponent } from './shared/button-select-option/button-select-option.component';
 import { PercentageGraphComponent } from './shared/percentage-graph/percentage-graph.component';
 import { ChartsModule } from 'ng2-charts';
+import { GraphComponent } from './graph/graph.component';
+import { GraphXGridlineComponent } from './graph/graph-x-gridline.component';
+import { GraphYGridlineComponent } from './graph/graph-y-gridline.component';
+import { GraphDatalineComponent } from './graph/graph-dataline.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -55,6 +59,10 @@ export function getBaseUrl() {
     ButtonSelectComponent,
     ButtonSelectOptionComponent,
     PercentageGraphComponent,
+    GraphComponent,
+    GraphXGridlineComponent,
+    GraphYGridlineComponent,
+    GraphDatalineComponent,
   ],
   imports: [
     BrowserModule,

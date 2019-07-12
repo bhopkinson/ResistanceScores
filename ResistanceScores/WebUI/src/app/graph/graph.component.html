@@ -1,0 +1,12 @@
+<p>
+  graph works!
+</p>
+<ng-content></ng-content>
+<svg class="graph" [attr.viewBox]="viewBox">
+
+  <svg:g>
+    <ng-container *ngFor="let axis of xGridlines">
+      <svg:line class="gridline x-gridline" [ngClass]="axis.classes" [attr.x1]="axis.x" [attr.x2]="axis.x" [attr.y1]="0" [attr.y2]="yScale" />
+    </ng-container>
+  </svg:g>
+</svg>
