@@ -1,14 +1,18 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'app-graph-y-gridline',
+  selector: 'app-graph-x-label',
   template: ''
 })
-export class GraphYGridlineComponent implements OnInit  {
+export class GraphXLabelComponent implements OnInit  {
 
   constructor(private elRef: ElementRef) {}
 
-  @Input() public y: number;
+  @Input() public x: number;
+  @Input() public text: string;
+
+  @Input() public xScaleOffset = 0;
+  @Input() public yScaleOffset = 0;
 
   public classes: string;
 

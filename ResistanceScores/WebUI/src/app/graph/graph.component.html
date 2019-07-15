@@ -3,10 +3,75 @@
 </p>
 <ng-content></ng-content>
 <svg class="graph" [attr.viewBox]="viewBox">
-
-  <svg:g>
-    <ng-container *ngFor="let axis of xGridlines">
-      <svg:line class="gridline x-gridline" [ngClass]="axis.classes" [attr.x1]="axis.x" [attr.x2]="axis.x" [attr.y1]="0" [attr.y2]="yScale" />
-    </ng-container>
-  </svg:g>
+  <!-- Background -->
+  <rect class="graph-background" [attr.width]="xScale" [attr.height]="yScale" />
+  <!-- Data clip path -->
+  <clipPath id="th-clip-path-{{id}}">
+    <rect [attr.width]="xScale" [attr.height]="yScale" />
+  </clipPath>
+  <!-- X Gridlines -->
+  <ng-container *ngFor="let line of xGridlines">
+    <svg:line
+      [ngClass]="line.classes"
+      [attr.x1]="xValueToCoord(line.x)"
+      [attr.x2]="xValueToCoord(line.x)"
+      [attr.y1]="0"
+      [attr.y2]="yScale" />
+  </ng-container>
+  <!-- Y Gridlines -->
+  <ng-container *ngFor="let line of yGridlines">
+      <svg:line
+        [ngClass]="line.classes"
+        [attr.x1]="0"
+        [attr.x2]="xScale"
+        [attr.y1]="yValueToCoord(line.y)"
+        [attr.y2]="yValueToCoord(line.y)" />
+  </ng-container>
+  <!-- X Ticks -->
+  <ng-container *ngFor="let tick of xTicks">
+      <svg:line
+        [ngClass]="tick.classes"
+        [attr.x1]="xValueToCoord(tick.x)"
+        [attr.x2]="xValueToCoord(tick.x)"
+        [attr.y1]="yScale"
+        [attr.y2]="yScale + yTickScale" />
+  </ng-container>
+  <!-- Y Ticks -->
+  <ng-container *ngFor="let tick of yTicks">
+      <svg:line
+        [ngClass]="tick.classes"
+        [attr.x1]="xScale"
+        [attr.x2]="xScale + xTickScale"
+        [attr.y1]="yValueToCoord(tick.y)"
+        [attr.y2]="yValueToCoord(tick.y)" />
+  </ng-container>
+  <!-- X Labels -->
+  <ng-container *ngFor="let label of xLabels">
+      <svg:text
+        [ngClass]="label.classes"
+        [attr.x]="xValueToCoord(label.x) + label.xScaleOffset"
+        [attr.y]="yScale + xLabelScale + label.yScaleOffset"
+        [attr.font-size]="xLabelScale">
+      {{label.text}}
+      </svg:text>
+  </ng-container>
+  <!-- Y Labels -->
+  <ng-container *ngFor="let label of yLabels">
+      <svg:text
+        [ngClass]="label.classes"
+        [attr.x]="xScale + label.xScaleOffset"
+        [attr.y]="yValueToCoord(label.y) + yLabelScale + label.yScaleOffset"
+        [attr.font-size]="yLabelScale">
+      {{label.text}}
+      </svg:text>
+  </ng-container>
+  <!-- Datalines -->
+  <ng-container *ngFor="let line of datalines">
+      <svg:polyline
+        [ngClass]="line.classes"
+        [attr.points]="coordsToPolylinePoints(xyZip(
+          xValuesToCoords(line.xData),
+          yValuesToCoords(line.yData)))">
+      </svg:polyline>
+  </ng-container>
 </svg>

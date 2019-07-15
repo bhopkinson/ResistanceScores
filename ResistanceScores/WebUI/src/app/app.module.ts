@@ -30,8 +30,12 @@ import { PercentageGraphComponent } from './shared/percentage-graph/percentage-g
 import { ChartsModule } from 'ng2-charts';
 import { GraphComponent } from './graph/graph.component';
 import { GraphXGridlineComponent } from './graph/graph-x-gridline.component';
+import { GraphXTickComponent } from './graph/graph-x-tick.component';
 import { GraphYGridlineComponent } from './graph/graph-y-gridline.component';
+import { GraphYTickComponent } from './graph/graph-y-tick.component';
 import { GraphDatalineComponent } from './graph/graph-dataline.component';
+import { GraphXLabelComponent } from './graph/graph-x-label.component';
+import { GraphYLabelComponent } from './graph/graph-y-label.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -63,6 +67,10 @@ export function getBaseUrl() {
     GraphXGridlineComponent,
     GraphYGridlineComponent,
     GraphDatalineComponent,
+    GraphXTickComponent,
+    GraphYTickComponent,
+    GraphXLabelComponent,
+    GraphYLabelComponent
   ],
   imports: [
     BrowserModule,

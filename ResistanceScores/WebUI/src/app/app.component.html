@@ -1,27 +1,108 @@
 <router-outlet></router-outlet>
 
-<app-graph [xMin]="0"
-           [xMax]="75"
-           [yMin]="20"
-           [yMax]="200"
-           [xScale]="100"
-           [yScale]="100">
-  <app-graph-x-gridline [class.hee]="true" class="special" [x]="0"></app-graph-x-gridline>
-  <app-graph-x-gridline [x]="10"></app-graph-x-gridline>
-  <app-graph-x-gridline [x]="20"></app-graph-x-gridline>
-  <app-graph-y-gridline></app-graph-y-gridline>
-  <app-graph-dataline></app-graph-dataline>
+<app-graph [xMin]="xMin"
+           [xMax]="xMax"
+           [yMin]="yMin"
+           [yMax]="yMax"
+           [xScale]="xScale"
+           [yScale]="yScale"
+           [xTickScale]="xTickScale"
+           [yTickScale]="yTickScale"
+           [xLabelScale]="xLabelScale"
+           [yLabelScale]="yLabelScale"
+           class="graph">
+  <app-graph-x-gridline
+    *ngFor="let line of xGridlines"
+    class="gridline special"
+    [x]="line"></app-graph-x-gridline>
+    
+  <app-graph-y-gridline
+    *ngFor="let line of yGridlines"
+    class="gridline"
+    [y]="line"></app-graph-y-gridline>
+
+  <app-graph-x-tick
+    *ngFor="let line of xGridlines"
+    class="gridline special"
+    [x]="line"></app-graph-x-tick>
+
+  <app-graph-y-tick
+    *ngFor="let line of yGridlines"
+    class="gridline"
+    [y]="line"></app-graph-y-tick>
+
+  <app-graph-x-label
+    *ngFor="let line of xGridlines"
+    class="x-text"
+    [x]="line"
+    [text]="line"></app-graph-x-label>
+
+  <app-graph-y-label
+    *ngFor="let line of yGridlines"
+    class="y-text"
+    [y]="line"
+    [text]="line"></app-graph-y-label>
+
+  <app-graph-dataline
+    [xData]="[0,5,10,15,20,30,45,56,90]"
+    [yData]="[40,51,22,33,64,55,36,47,58]"
+    class="data-1"
+  ></app-graph-dataline>
 </app-graph>
 
-<svg class="graph" [attr.viewBox]="viewBox">
+<table>
+  <tr>
+    <th>xMin</th>
+    <th>xMax</th>
+    <th>yMin</th>
+    <th>yMax</th>
+  </tr>
+  <tr>
+    <td><input type="number" [(ngModel)]="xMin"></td>
+    <td><input type="number" [(ngModel)]="xMax"></td>
+    <td><input type="number" [(ngModel)]="yMin"></td>
+    <td><input type="number" [(ngModel)]="yMax"></td>
+  </tr>
+</table>
 
-  <svg:g>
-    <ng-container *ngFor="let axis of xGridlines">
-      <svg:line class="gridline x-gridline" [attr.x1]="axis.x1" [attr.x2]="axis.x2" [attr.y1]="axis.y1" [attr.y2]="axis.y2" />
-    </ng-container>
-    <ng-container *ngFor="let axis of yGridlines">
-      <svg:line class="gridline y-gridline" [attr.x1]="axis.x1" [attr.x2]="axis.x2" [attr.y1]="axis.y1" [attr.y2]="axis.y2" />
-    </ng-container>
-    <svg:path class="datapath" [attr.d]="dataPath"></svg:path>
-  </svg:g>
-</svg>
+
+<table>
+    <tr>
+      <th>xScale</th>
+      <th>yScale</th>
+      <th>xTickScale</th>
+      <th>yTickScale</th>
+    </tr>
+    <tr>
+      <td><input type="number" [(ngModel)]="xScale"></td>
+      <td><input type="number" [(ngModel)]="yScale"></td>
+      <td><input type="number" [(ngModel)]="xTickScale"></td>
+      <td><input type="number" [(ngModel)]="yTickScale"></td>
+    </tr>
+  </table>
+
+  
+<table>
+    <tr>
+      <th>x gridlines</th>
+    </tr>
+    <tr>
+      <td *ngFor="let line of xGridlines" style="width:50px">
+        <input type="number" [(ngModel)]="line" style="width:50px">
+      </td>
+      <td><button (click)="xGridlines.push(0)">+</button></td>
+    </tr>
+  </table>
+
+    
+<table>
+    <tr>
+      <th>y gridlines</th>
+    </tr>
+    <tr>
+      <td *ngFor="let line of yGridlines" style="width:50px">
+        <input type="number" [(ngModel)]="line" style="width:50px">
+      </td>
+      <td><button (click)="yGridlines.push(0)">+</button></td>
+    </tr>
+  </table>

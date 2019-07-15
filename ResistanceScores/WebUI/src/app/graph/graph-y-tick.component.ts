@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'app-graph-y-gridline',
+  selector: 'app-graph-y-tick',
   template: ''
 })
-export class GraphYGridlineComponent implements OnInit  {
+export class GraphYTickComponent implements OnInit  {
 
   constructor(private elRef: ElementRef) {}
 

@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, HostBinding, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-graph-x-gridline',
-  templateUrl: './graph-x-gridline.component.html',
-  styleUrls: ['./graph-x-gridline.component.scss']
+  template: ''
 })
-export class GraphXGridlineComponent implements OnInit, AfterViewInit  {
+export class GraphXGridlineComponent implements OnInit  {
 
   constructor(private elRef: ElementRef) {}
 
@@ -18,26 +17,13 @@ export class GraphXGridlineComponent implements OnInit, AfterViewInit  {
   }
 
   ngOnInit() {
-    let observer = new MutationObserver(mutations => {
+    const observer = new MutationObserver(mutations => {
       mutations.forEach((mutation) => {
         this.classes = (mutation.target as HTMLElement).classList.value;
       });
     });
-    var config = { attributes: true, childList: false, characterData: false };
+    const config = { attributes: true, childList: false, characterData: false };
 
     observer.observe(this.elRef.nativeElement, config);
   }
-
-  ngAfterViewInit(): void {
-    let observer = new MutationObserver(mutations => {
-      mutations.forEach(function (mutation) {
-        console.log(mutation.type);
-      });
-    });
-    var config = { attributes: true, childList: true, characterData: true };
-
-    observer.observe(this.elRef.nativeElement, config);
-  
-  }
-
 }
