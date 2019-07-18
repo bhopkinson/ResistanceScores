@@ -14,15 +14,15 @@ export class DayReviewComponent implements OnInit {
   public summaryPlayers: string[] = [];
   public summaryGames: GameSummaryDto[] = [];
   public isLoading = true;
-  public errorOccurred = false
+  public errorOccurred = false;
 
   public daysAgo = 0;
 
   ngOnInit() {
-    this.load();
+    this._loadData();
   }
 
-  summaryWinOrLoss(player: string, game: GameSummaryDto): boolean | null {
+  getWinOrLoss(player: string, game: GameSummaryDto): boolean | null {
     let gamePlayer = game.players.find(p => p.player === player);
 
     if (gamePlayer === undefined) {
@@ -34,12 +34,16 @@ export class DayReviewComponent implements OnInit {
 
   previousDay() {
     this.daysAgo++;
-    this.load();
+    this._loadData();
   }
 
   nextDay() {
     this.daysAgo--;
-    this.load();
+    this._loadData();
+  }
+
+  reloadData(): void {
+    this._loadData();
   }
 
   get daysAgoString(): string {
@@ -53,8 +57,9 @@ export class DayReviewComponent implements OnInit {
     }
   }
 
-  private load(): void {
+  private _loadData(): void {
     this.isLoading = true;
+    this.errorOccurred = false;
     this._leaderboardClient
       .getDaySummary(this.daysAgo)
       .pipe(take(1))

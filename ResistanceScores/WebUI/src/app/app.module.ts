@@ -12,8 +12,7 @@ import { PlayerDetailComponent } from './pages/player/player-detail/player-detai
 import { PlayerListingComponent } from './pages/player/player-listing/player-listing.component';
 import { PlayerCreateComponent } from './pages/player/player-edit/player-create.component';
 import { PlayerComponent } from './pages/player/player.component';
-import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
-import { AllTimeLeaderboardComponent } from './pages/leaderboard/all-time-leaderboard/all-time-leaderboard.component';
+import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { GameComponent } from './pages/game/game.component';
@@ -36,6 +35,8 @@ import { GraphYTickComponent } from './graph/graph-y-tick.component';
 import { GraphDatalineComponent } from './graph/graph-dataline.component';
 import { GraphXLabelComponent } from './graph/graph-x-label.component';
 import { GraphYLabelComponent } from './graph/graph-y-label.component';
+import { GameOverviewComponent } from './shared/game-overview/game-overview.component';
+import { HomeComponent } from './pages/home/home.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -51,7 +52,6 @@ export function getBaseUrl() {
     PlayerCreateComponent,
     PlayerComponent,
     LeaderboardComponent,
-    AllTimeLeaderboardComponent,
     GameComponent,
     GameEditComponent,
     GameListingComponent,
@@ -70,7 +70,9 @@ export function getBaseUrl() {
     GraphXTickComponent,
     GraphYTickComponent,
     GraphXLabelComponent,
-    GraphYLabelComponent
+    GraphYLabelComponent,
+    GameOverviewComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

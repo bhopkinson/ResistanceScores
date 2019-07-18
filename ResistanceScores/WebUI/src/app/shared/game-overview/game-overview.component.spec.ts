@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllTimeLeaderboardComponent } from './all-time-leaderboard.component';
+import { GameOverviewComponent } from './game-overview.component';
 
-describe('AllTimeLeaderboardComponent', () => {
-  let component: AllTimeLeaderboardComponent;
-  let fixture: ComponentFixture<AllTimeLeaderboardComponent>;
+describe('GameOverviewComponent', () => {
+  let component: GameOverviewComponent;
+  let fixture: ComponentFixture<GameOverviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AllTimeLeaderboardComponent ]
+      declarations: [ GameOverviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AllTimeLeaderboardComponent);
+    fixture = TestBed.createComponent(GameOverviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
