@@ -40,7 +40,7 @@ export class GameOverviewComponent implements OnInit {
       .getGameLeaderboard()
       .pipe(take(1))
       .subscribe(
-        overview => { this.gameOverview = overview; },
+        overview => { this.gameOverview = overview; this.isLoading = false; },
         error => { this.errorOccurred = true; }
       )
   }

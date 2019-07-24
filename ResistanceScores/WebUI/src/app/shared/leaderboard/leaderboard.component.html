@@ -13,9 +13,9 @@
     <tr *ngFor="let player of leaderboard">
       <td>{{player.initials}}</td>
       <td>{{player.wins}}</td>
-      <td>{{losses(player)}}</td>
+      <td>{{getLossCount(player)}}</td>
       <td>{{player.totalGames}}</td>
-      <td>{{percentage(player) | number: '2.2-2' }}</td>
+      <td>{{getWinPercentage(player) | number: '2.2-2' }}</td>
     </tr>
   </tbody>
 </table>
