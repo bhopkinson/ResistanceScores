@@ -8,6 +8,8 @@
   --grey-dark: #999999;
   --grey-xdark: #666666;
   --grey-xxdark: #333333;
+
+  user-select: none;
 }
 
 body {
@@ -32,6 +34,10 @@ body {
 }
 
 .leaderboard-component {
+  flex-grow: 5;
+}
+
+.percentage-history-component {
   flex-grow: 5;
 }
 
@@ -66,10 +72,6 @@ td, th {
 app-button-select {
   display: flex;
   flex-wrap: wrap;
-
-  &:last-of-type {
-    border-bottom: 1px solid grey;
-  }
 }
 
 app-button-select-option {
