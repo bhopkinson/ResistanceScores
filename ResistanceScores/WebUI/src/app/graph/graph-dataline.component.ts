@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { copyClassesAndStyles } from '../shared/functions';
 
 @Component({
   selector: 'app-graph-dataline',
@@ -6,12 +7,14 @@ import { Component, OnInit, Input, ElementRef } from '@angular/core';
 })
 export class GraphDatalineComponent implements OnInit  {
 
-  constructor(private elRef: ElementRef) {}
+  constructor(_elRef: ElementRef) { this.elRef = _elRef }
 
-  @Input() public xData: number[];
-  @Input() public yData: number[];
+  @Input() public xData: number[] = [];
+  @Input() public yData: number[] = [];
 
   public classes: string;
+  public styles: string;
+  public elRef: ElementRef;
 
   public get isValid(): boolean {
     const xDataAndYDataSameLength = this.xData.length === this.yData.length;
@@ -19,13 +22,6 @@ export class GraphDatalineComponent implements OnInit  {
   }
 
   ngOnInit() {
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach((mutation) => {
-        this.classes = (mutation.target as HTMLElement).classList.value;
-      });
-    });
-    const config = { attributes: true, childList: false, characterData: false };
-
-    observer.observe(this.elRef.nativeElement, config);
+    copyClassesAndStyles(this);
   }
 }
