@@ -1,12 +1,9 @@
-<p>
-  graph works!
-</p>
 <ng-content></ng-content>
 <svg class="graph" [attr.viewBox]="viewBox">
   <!-- Background -->
   <rect class="graph-background" [attr.width]="xScale" [attr.height]="yScale" />
   <!-- Data clip path -->
-  <clipPath id="th-clip-path-{{id}}">
+  <clipPath [id]="clipPathId">
     <rect [attr.width]="xScale" [attr.height]="yScale" />
   </clipPath>
   <!-- X Gridlines -->
@@ -16,7 +13,8 @@
       [attr.x1]="xValueToCoord(line.x)"
       [attr.x2]="xValueToCoord(line.x)"
       [attr.y1]="0"
-      [attr.y2]="yScale" />
+      [attr.y2]="yScale"
+      [attr.clip-path]="'url(#'+clipPathId+')'" />
   </ng-container>
   <!-- Y Gridlines -->
   <ng-container *ngFor="let line of yGridlines">
@@ -25,7 +23,8 @@
         [attr.x1]="0"
         [attr.x2]="xScale"
         [attr.y1]="yValueToCoord(line.y)"
-        [attr.y2]="yValueToCoord(line.y)" />
+        [attr.y2]="yValueToCoord(line.y)"
+        [attr.clip-path]="'url(#'+clipPathId+')'" />
   </ng-container>
   <!-- X Ticks -->
   <ng-container *ngFor="let tick of xTicks">
@@ -69,9 +68,11 @@
   <ng-container *ngFor="let line of datalines">
       <svg:polyline
         [ngClass]="line.classes"
+        [ngStyle]="line.styles"
         [attr.points]="coordsToPolylinePoints(xyZip(
           xValuesToCoords(line.xData),
-          yValuesToCoords(line.yData)))">
+          yValuesToCoords(line.yData)))"
+        [attr.clip-path]="'url(#'+clipPathId+')'">
       </svg:polyline>
   </ng-container>
 </svg>

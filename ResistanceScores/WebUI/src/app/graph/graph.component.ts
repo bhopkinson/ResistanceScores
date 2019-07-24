@@ -29,6 +29,7 @@ export class GraphComponent implements OnInit {
   @Input() public yLabelScale = 0;
 
   @Input() public id: string;
+  private _fallbackId = Math.random().toString();
 
   @ContentChildren(GraphXGridlineComponent) xGridlines: QueryList<GraphXGridlineComponent>;
   @ContentChildren(GraphYGridlineComponent) yGridlines: QueryList<GraphYGridlineComponent>;
@@ -72,11 +73,18 @@ export class GraphComponent implements OnInit {
     });
   }
 
+  public get clipPathId(): string {
+    const id = this.id || this._fallbackId;
+    return `th-clip-path-${id}`;
+  }
+
   public get viewBox(): string {
     return `0 0 ${this.xScale + this.xTickScale} ${this.yScale + this.yTickScale}`;
   }
 
   public get isValid(): boolean {
+    const idIsUndefined = this.id !== undefined;
+
     const xMaxIsLargerThanXMin = this.xMax <= this.xMin;
     const yMaxIsLargerThanYMin = this.yMax <= this.yMin;
     const xScaleIsLargerThanZero = this.xScale > 0;
