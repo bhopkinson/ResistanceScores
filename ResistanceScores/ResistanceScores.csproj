@@ -46,8 +46,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="WebUi\src\app\shared\" />
+    <None Remove="WebUi\src\app\shared\functions.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="WebUi\src\app\shared\functions.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
