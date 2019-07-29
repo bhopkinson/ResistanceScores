@@ -22,8 +22,8 @@ namespace ResistanceScores.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(GraphDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GraphDto>> Get()
+        [ProducesResponseType(typeof(List<GraphPlayerDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GraphPlayerDto>>> Get()
         {
             var graph = await _graphService.GetGraph();
             return Ok(graph);

@@ -9,6 +9,6 @@ namespace ResistanceScores.Models.api
     {
         public int Wins;
         public int TotalGames;
-        public int GameId;
+        public DateTime Date;
     }
 }

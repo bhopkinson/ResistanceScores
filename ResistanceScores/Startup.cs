@@ -51,7 +51,7 @@ namespace ResistanceScores
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
             else

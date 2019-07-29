@@ -46,8 +46,9 @@
                      [y]="line"
                      [text]="line"></app-graph-y-label>
 
-  <app-graph-dataline [xData]="xData"
-                      [yData]="yData"
+  <app-graph-dataline *ngFor="let graphPlayer of graphPlayers"
+                      [xData]="getGameIds(graphPlayer)"
+                      [yData]="getWinPercentages(graphPlayer)"
                       class="data-1"></app-graph-dataline>
 </app-graph>
 

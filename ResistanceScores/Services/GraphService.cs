@@ -17,64 +17,78 @@ namespace ResistanceScores.Services
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task<GraphDto> GetGraph()
+        public async Task<List<GraphPlayerDto>> GetGraph()
         {
             var gamePlayers = _appDbContext.GamePlayers
                 .Include(gp => gp.Game)
-                .Include(gp => gp.Player)
-                .OrderBy(gp => gp.GameId);
+                .Include(gp => gp.Player);
 
-            var gamePlayerWins = await gamePlayers
-                .Where(o => o.PlayerId == 2)
-                .Select(o => new GamePlayerWinDto
+            var playerDateWinList = await gamePlayers
+                .Select(o => new
                 {
-                    GameId = o.GameId,
-                    PlayerId = o.PlayerId,
-                    Win = (o.WasResistance && o.Game.ResistanceWin) || (!o.WasResistance && !o.Game.ResistanceWin)
-                }).ToListAsync();
+                    Player = o.PlayerId,
+                    o.Game.Date.Date,
+                    Win = o.WasResistance == o.Game.ResistanceWin,
+                })
+                .ToListAsync();
 
-            var firstGameId = gamePlayerWins.Select(o => o.GameId).Min();
-            var lastGameId = gamePlayerWins.Select(o => o.GameId).Max();
-            var allPlayerWins = gamePlayerWins.GroupBy(o => o.PlayerId, o => new { o.GameId, o.Win });
+            var playerDateTotalList = playerDateWinList
+                .GroupBy(
+                    o => new { o.Player, o.Date },
+                    o => o.Win,
+                    (playerDate, wins) => new
+                    {
+                        playerDate.Player,
+                        playerDate.Date,
+                        WinsThatDay = wins.Count(w => w),
+                        GamesThatDay = wins.Count()
+                    })
+                .OrderBy(o => o.Date);
+
+            var players = playerDateTotalList
+                .GroupBy(
+                    o => o.Player,
+                    o => new { o.Date, o.WinsThatDay, o.GamesThatDay });
 
             var graphPlayers = new List<GraphPlayerDto>();
 
-            foreach (var singlePlayerWins in allPlayerWins)
+            foreach (var player in players)
             {
-                var playerId = singlePlayerWins.Key;
-                var graphPoints = new List<GraphPointDto>();
-                var wins = 0;
-                var totalGames = 0;
-                foreach (var game in singlePlayerWins)
+                var runningWinCount = 0;
+                var runningGameCount = 0;
+                var graphPlayer = new GraphPlayerDto
                 {
-                    if (game.Win)
+                    PlayerId = player.Key,
+                    GraphPoints = player.Select(o =>
                     {
-                        wins++;
-                    }
-                    totalGames++;
-                    graphPoints.Add(new GraphPointDto
-                    {
-                        Wins = wins,
-                        TotalGames = totalGames,
-                        GameId = game.GameId
-                    });
-                }
-                graphPlayers.Add(new GraphPlayerDto
-                {
-                    PlayerId = playerId,
-                    GraphPoints = graphPoints
-                });
-            };
+                        runningWinCount += o.WinsThatDay;
+                        runningGameCount += o.GamesThatDay;
+                        return new GraphPointDto
+                        {
+                            Date = o.Date,
+                            Wins = runningWinCount,
+                            TotalGames = runningGameCount
+                        };
+                    }).ToList()
+                };
 
-            var graphDto = new GraphDto
-            {
-                GraphPlayers = graphPlayers,
-                FirstGameId = firstGameId,
-                LastGameId = lastGameId
+                graphPlayers.Add(graphPlayer);
+            }
 
-            };
+            return graphPlayers;
+        }
 
-            return graphDto;
+        //private Hello GroupByDate(List<GamePlayerWinDto> gamePlayerWins) {
+        //    return gamePlayerWins.Select(gpw => new Hello {
+                
+        //    })
+        //}
+
+        private class Hello
+        {
+            public int Wins { get; set; } 
+            public int TotalGames { get; set; }
+            public int Date { get; set; }
         }
     }
 }

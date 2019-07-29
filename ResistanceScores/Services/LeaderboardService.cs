@@ -169,5 +169,15 @@ namespace ResistanceScores.Services
                 Games = games
             };
         }
+
+        //public async Task<List<StreakDto>> GetStreaks()
+        //{
+        //    var query = _appDbContext
+        //        .Players
+        //        .Include(x => x.Games)
+        //        .ThenInclude(x => x.Game)
+        //        .Select;
+
+        //}
     }
 }

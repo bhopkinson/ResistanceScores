@@ -29,6 +29,13 @@ function copyClassesAndStyles(element) {
     observer.observe(element.elRef.nativeElement, config);
 }
 exports.copyClassesAndStyles = copyClassesAndStyles;
+function isNullOrUndefined(value) {
+    if (value === null || value === undefined) {
+        return true;
+    }
+    return false;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
 ///**
 // * Copy all styles on the DOM element to a "classes" property on the component
 // * @param element

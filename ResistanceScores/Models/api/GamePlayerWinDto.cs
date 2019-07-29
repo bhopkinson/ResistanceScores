@@ -12,5 +12,10 @@ namespace ResistanceScores.Models.api
         public int PlayerId { get; set; }
 
         public bool Win { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public int WinCount { get; set; }
+        public int GameCount { get; set; }
     }
 }

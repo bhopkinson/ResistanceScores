@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GraphClient, GraphDto } from '../../services/web-api.service.generated';
+import { GraphClient, GraphPointDto, GraphPlayerDto } from '../../services/web-api.service.generated';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
 import { take } from 'rxjs/operators';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-percentage-graph',
@@ -16,14 +17,14 @@ export class PercentageGraphComponent implements OnInit {
   isLoading = true;
   errorOccurred = false;
 
-  graphData: GraphDto;
+  players: GraphPlayerDto[];
 
   ngOnInit() {
     this._graphClient.get()
       .pipe(take(1))
       .subscribe(
           data => {
-            this.graphData = data;
+            this.players = data;
             this.isLoading = false;
           },
           error => {
@@ -33,7 +34,7 @@ export class PercentageGraphComponent implements OnInit {
   }
   xMin = 0;
   xMax = 75;
-  yMin = 20;
+  yMin = 0;
   yMax = 100;
   xScale = 200;
   yScale = 100;
@@ -45,18 +46,25 @@ export class PercentageGraphComponent implements OnInit {
   xGridlines = [0, 10,20,30,40,50,60,70, 80, 90, 100];
   yGridlines = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
-  xData = [1, 2, 3, 4];
-
-  get yData(): number[] {
-    return [30,70,20,40]
+  getWinPercentage(graphPoint: GraphPointDto): number {
+    if (graphPoint.totalGames === 0) {
+      return 0;
+    }
+    return 100 * graphPoint.wins / graphPoint.totalGames;
   }
 
+  getWinPercentages(graphPlayer: GraphPlayerDto): number[] {
+    if (isNullOrUndefined(graphPlayer)) {
+      return [];
+    }
+    return graphPlayer.graphPoints.map(p => this.getWinPercentage(p));
+  }
 
-  public get firstDataline(): { xData: number[], yData: number[] } {
-    if (this.graphData === undefined) return { xData: [], yData: [] };
-    const xData = this.graphData.graphPlayers[0].graphPoints.map(gp => 100 * gp.wins / gp.totalGames);
-    const yData = this.graphData.graphPlayers[0].graphPoints.map(gp => gp.totalGames);
-    return {xData: xData, yData: yData}
+  getGameDates(graphPlayer: GraphPlayerDto): Date[] {
+    if (isNullOrUndefined(graphPlayer)) {
+      return [];
+    }
+    return graphPlayer.graphPoints.map(p => p.date);
   }
 
 }

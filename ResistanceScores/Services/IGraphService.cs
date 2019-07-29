@@ -8,6 +8,6 @@ namespace ResistanceScores.Services
 {
     public interface IGraphService
     {
-        Task<GraphDto> GetGraph();
+        Task<List<GraphPlayerDto>> GetGraph();
     }
 }

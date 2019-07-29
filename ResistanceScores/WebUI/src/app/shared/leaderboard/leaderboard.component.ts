@@ -23,11 +23,17 @@ export class LeaderboardComponent implements OnInit {
   public Timescale = Timescale;
 
   ngOnInit() {
+    console.log(13858);
+
     this._leaderboardClient
       .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
       .pipe(take(1))
       .subscribe(
-        leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); this.isLoading = false; },
+        leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); 
+          this.isLoading = false; 
+          console.log(leaderboard);
+          console.log(654684);
+          leaderboard.forEach(console.log) },
         error => { this.errorOccurred = true; }
       )
   }

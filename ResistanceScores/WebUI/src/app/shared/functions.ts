@@ -32,6 +32,13 @@ export function copyClassesAndStyles<T extends { elRef: ElementRef, classes: str
   observer.observe(element.elRef.nativeElement, config);
 }
 
+export function isNullOrUndefined(value: any) {
+  if (value === null || value === undefined) {
+    return true;
+  }
+  return false;
+}
+
 ///**
 // * Copy all styles on the DOM element to a "classes" property on the component
 // * @param element
