@@ -39,6 +39,13 @@ export function isNullOrUndefined(value: any) {
   return false;
 }
 
+export function arraySum(values: number[]): number {
+  if (values.length === 0) {
+    return 0;
+  }
+  return values.reduce((total, num) => total + num)
+}
+
 ///**
 // * Copy all styles on the DOM element to a "classes" property on the component
 // * @param element

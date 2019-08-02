@@ -46,9 +46,11 @@
                      [y]="line"
                      [text]="line"></app-graph-y-label>
 
-  <app-graph-dataline *ngFor="let graphPlayer of graphPlayers"
-                      [xData]="getGameIds(graphPlayer)"
-                      [yData]="getWinPercentages(graphPlayer)"
-                      class="data-1"></app-graph-dataline>
+  <app-graph-dataline *ngFor="let player of players; let i = index;"
+                      [xData]="getRelativeDays(player)"
+                      [yData]="getWinPercentages(player)"
+                      class="data-1"
+                      [hue]="getHue(i)"></app-graph-dataline>
+                      <!--TODO - TH - Move [hue] out of here, make it generic-->
 </app-graph>
 

@@ -22,7 +22,7 @@ export class GameClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:52664";
     }
 
     getGames(): Observable<GameListingDto[]> {
@@ -343,7 +343,7 @@ export class GraphClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:52664";
     }
 
     get(): Observable<GraphPlayerDto[]> {
@@ -407,7 +407,7 @@ export class LeaderboardClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:52664";
     }
 
     getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined, asOfWhen: number | undefined): Observable<LeaderboardDto[]> {
@@ -602,7 +602,7 @@ export class PlayerClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:52664";
     }
 
     getPlayers(): Observable<PlayerListingDto[]> {

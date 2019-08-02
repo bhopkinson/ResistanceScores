@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphClient, GraphPointDto, GraphPlayerDto } from '../../services/web-api.service.generated';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, Color } from 'ng2-charts';
 import { take } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { DateService } from 'src/app/services/date.service';
 
 @Component({
   selector: 'app-percentage-graph',
@@ -12,7 +11,11 @@ import { isNullOrUndefined } from 'util';
 })
 export class PercentageGraphComponent implements OnInit {
 
-  constructor(private _graphClient: GraphClient) { }
+  private DEGREES_IN_A_CIRCLE = 360;
+  private NUMBER_OF_X_GRIDLINES = 10;
+  private NUMBER_OF_Y_GRIDLINES = 10;
+
+  constructor(private _graphClient: GraphClient, private _dateService: DateService) { }
 
   isLoading = true;
   errorOccurred = false;
@@ -32,8 +35,8 @@ export class PercentageGraphComponent implements OnInit {
           }
       )
   }
-  xMin = 0;
-  xMax = 75;
+  xMin = 90;
+  xMax = 240;
   yMin = 0;
   yMax = 100;
   xScale = 200;
@@ -43,8 +46,29 @@ export class PercentageGraphComponent implements OnInit {
   xLabelScale = 4;
   yLabelScale = 3;
 
-  xGridlines = [0, 10,20,30,40,50,60,70, 80, 90, 100];
-  yGridlines = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+  get xGridlines(): number[] {
+    const xRange = this.xMax - this.xMin;
+    const xDiff = xRange / this.NUMBER_OF_X_GRIDLINES;
+    let xCoord = this.xMin;
+    const gridlines = [this.xMin];
+    for (var i = 0; i < this.NUMBER_OF_X_GRIDLINES; i++) {
+      xCoord += xDiff;
+      gridlines.push(xCoord);
+    }
+    return gridlines;
+  }
+
+  get yGridlines(): number[] {
+    const yRange = this.yMax - this.yMin;
+    const yDiff = yRange / this.NUMBER_OF_Y_GRIDLINES;
+    let yCoord = this.yMin;
+    const gridlines = [this.yMin];
+    for (var i = 0; i < this.NUMBER_OF_Y_GRIDLINES; i++) {
+      yCoord += yDiff;
+      gridlines.push(yCoord);
+    }
+    return gridlines;
+  }
 
   getWinPercentage(graphPoint: GraphPointDto): number {
     if (graphPoint.totalGames === 0) {
@@ -65,6 +89,34 @@ export class PercentageGraphComponent implements OnInit {
       return [];
     }
     return graphPlayer.graphPoints.map(p => p.date);
+  }
+
+  getRelativeDays(graphPlayer: GraphPlayerDto): number[] {
+    if (isNullOrUndefined(graphPlayer)) {
+      return [];
+    }
+    return graphPlayer.graphPoints.map(o => this.getDaysSinceJan1st2019(o.date));
+  }
+
+  getDaysSinceJan1st2019(date: Date): number {
+    return this._dateService.getRelativeDay(date);
+  }
+
+  getHue(index: number): number { // TODO - TH - Move this out of here, make it generic
+    const playerCount = this.playerCount;
+
+    if (playerCount === 0) {
+      return 0;
+    }
+
+    return this.DEGREES_IN_A_CIRCLE * (index / playerCount);
+  }
+
+  private get playerCount(): number {
+    if (isNullOrUndefined(this.players)) {
+      return 0
+    }
+    return this.players.length;
   }
 
 }

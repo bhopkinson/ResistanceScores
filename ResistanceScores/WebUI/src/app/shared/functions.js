@@ -36,6 +36,13 @@ function isNullOrUndefined(value) {
     return false;
 }
 exports.isNullOrUndefined = isNullOrUndefined;
+function arraySum(values) {
+    if (values.length === 0) {
+        return 0;
+    }
+    return values.reduce(function (total, num) { return total + num; });
+}
+exports.arraySum = arraySum;
 ///**
 // * Copy all styles on the DOM element to a "classes" property on the component
 // * @param element

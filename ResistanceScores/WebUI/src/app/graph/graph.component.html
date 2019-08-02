@@ -66,13 +66,14 @@
   </ng-container>
   <!-- Datalines -->
   <ng-container *ngFor="let line of datalines">
-      <svg:polyline
-        [ngClass]="line.classes"
-        [ngStyle]="line.styles"
-        [attr.points]="coordsToPolylinePoints(xyZip(
+    <svg:polyline [ngClass]="line.classes"
+                  [ngStyle]="line.styles"
+                  [attr.points]="coordsToPolylinePoints(xyZip(
           xValuesToCoords(line.xData),
           yValuesToCoords(line.yData)))"
-        [attr.clip-path]="'url(#'+clipPathId+')'">
-      </svg:polyline>
+                  [attr.clip-path]="'url(#'+clipPathId+')'"
+                  [style.stroke]="getColour(line.hue)">
+      <!--TODO - TH - Move [style.stroke] out of here, make it generic-->
+    </svg:polyline>
   </ng-container>
 </svg>

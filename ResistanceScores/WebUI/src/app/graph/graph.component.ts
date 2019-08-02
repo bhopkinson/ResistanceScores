@@ -14,6 +14,9 @@ import { GraphYLabelComponent } from './graph-y-label.component';
 })
 export class GraphComponent implements OnInit {
 
+  private DATALINE_HSL_SATURATION = '50%';
+  private DATALINE_HSL_LUMINOSITY = '50%';
+
   @Input() public xMin: number;
   @Input() public xMax: number;
   @Input() public yMin: number;
@@ -80,6 +83,10 @@ export class GraphComponent implements OnInit {
 
   public get viewBox(): string {
     return `0 0 ${this.xScale + this.xTickScale} ${this.yScale + this.yTickScale}`;
+  }
+
+  public getColour(hue: number): string {
+    return `hsl(${hue},${this.DATALINE_HSL_SATURATION},${this.DATALINE_HSL_LUMINOSITY})`;
   }
 
   public get isValid(): boolean {

@@ -19,10 +19,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.0.4" />
-    <PackageReference Include="NSwag.MSBuild" Version="13.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,11 +63,11 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
   </Target>
 
-  <Target Name="NSwag" AfterTargets="Build">
+  <!--<Target Name="NSwag" AfterTargets="Build">
     <Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
     <Exec Command="$(NSwagExe_Core22) run nswag.json /variables:Configuration=$(Configuration)" />
     <RemoveDir Directories="$(OutDir)References" />
-  </Target>
+  </Target>-->
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

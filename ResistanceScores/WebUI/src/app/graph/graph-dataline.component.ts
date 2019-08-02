@@ -11,6 +11,7 @@ export class GraphDatalineComponent implements OnInit  {
 
   @Input() public xData: number[] = [];
   @Input() public yData: number[] = [];
+  @Input() public hue: number;
 
   public classes: string;
   public styles: string;
