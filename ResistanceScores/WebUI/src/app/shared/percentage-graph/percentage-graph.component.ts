@@ -35,8 +35,9 @@ export class PercentageGraphComponent implements OnInit {
           }
       )
   }
-  xMin = 90;
-  xMax = 240;
+
+  xMin = this.oneWeekAgoToday;
+  xMax = this.today;
   yMin = 0;
   yMax = 100;
   xScale = 200;
@@ -45,6 +46,27 @@ export class PercentageGraphComponent implements OnInit {
   yTickScale = 5;
   xLabelScale = 4;
   yLabelScale = 3;
+
+  // TODO - TH - See why this isn't working
+  //get xMinAsDate(): Date {
+  //  return this.isLoading
+  //    ? new Date()
+  //    : this._dateService.getDateFromRelativeDay(this.xMin);
+  //}
+
+  //set xMinAsDate(date: Date) {
+  //  this.xMin = this._dateService.getRelativeDay(date)
+  //}
+
+  //get xMaxAsDate(): Date {
+  //  return this.isLoading
+  //    ? new Date()
+  //    : this._dateService.getDateFromRelativeDay(this.xMax);
+  //}
+
+  //set xMaxAsDate(date: Date) {
+  //  this.xMax = this._dateService.getRelativeDay(date)
+  //}
 
   get xGridlines(): number[] {
     const xRange = this.xMax - this.xMin;
@@ -112,11 +134,25 @@ export class PercentageGraphComponent implements OnInit {
     return this.DEGREES_IN_A_CIRCLE * (index / playerCount);
   }
 
+  getXLabel(relativeDay: number): Date {
+    return this._dateService.getDateFromRelativeDay(relativeDay);
+  }
+
   private get playerCount(): number {
     if (isNullOrUndefined(this.players)) {
       return 0
     }
     return this.players.length;
+  }
+
+  private get oneWeekAgoToday(): number {
+    const date = this._dateService.oneWeekAgoToday;
+    return this._dateService.getRelativeDay(date);
+  }
+
+  private get today(): number {
+    const date = this._dateService.today;
+    return this._dateService.getRelativeDay(date);
   }
 
 }

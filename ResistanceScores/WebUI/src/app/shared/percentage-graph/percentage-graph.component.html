@@ -39,7 +39,7 @@
   <app-graph-x-label *ngFor="let line of xGridlines"
                      class="x-text"
                      [x]="line"
-                     [text]="line"></app-graph-x-label>
+                     text="{{getXLabel(line) | date:'dd/MM'}}"></app-graph-x-label>
 
   <app-graph-y-label *ngFor="let line of yGridlines"
                      class="y-text"
@@ -51,6 +51,9 @@
                       [yData]="getWinPercentages(player)"
                       class="data-1"
                       [hue]="getHue(i)"></app-graph-dataline>
-                      <!--TODO - TH - Move [hue] out of here, make it generic-->
+  <!--TODO - TH - Move [hue] out of here, make it generic-->
 </app-graph>
-
+<label for="dayssince">From</label>
+<input type="number" name="dayssince" [(ngModel)]="xMinAsDate" />
+<label for="dayssince">To</label>
+<input type="number" name="dayssince" [(ngModel)]="xMaxAsDate" />
