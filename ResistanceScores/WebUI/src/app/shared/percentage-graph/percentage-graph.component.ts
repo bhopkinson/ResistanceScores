@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GraphClient, GraphPointDto, GraphPlayerDto } from '../../services/web-api.service.generated';
+import { GraphClient, GraphPointDto, GraphPlayerDto, PlayerClient } from '../../services/web-api.service.generated';
 import { take } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { DateService } from 'src/app/services/date.service';
+import { PlayerListingDto } from 'src/app/web-api.service.generated';
 
 @Component({
   selector: 'app-percentage-graph',
@@ -15,12 +16,21 @@ export class PercentageGraphComponent implements OnInit {
   private NUMBER_OF_X_GRIDLINES = 10;
   private NUMBER_OF_Y_GRIDLINES = 10;
 
-  constructor(private _graphClient: GraphClient, private _dateService: DateService) { }
+  private DATALINE_HSL_SATURATION = '50%';
+  private DATALINE_HSL_LUMINOSITY = '50%';
 
-  isLoading = true;
+  private UNKNOWN_PLAYER_INITIALS_STRING = '???';
+
+  constructor(private _graphClient: GraphClient, private _playerClient: PlayerClient, private _dateService: DateService) { }
+
+  get isLoading() { return this.arePlayersLoading || this.arePlayerDetailssLoading };
+  arePlayersLoading = true;
+  arePlayerDetailssLoading = true;
   errorOccurred = false;
 
   players: GraphPlayerDto[];
+  playerDetails: PlayerListingDto[];
+  hiddenPlayers: number[] = [];
 
   ngOnInit() {
     this._graphClient.get()
@@ -28,11 +38,22 @@ export class PercentageGraphComponent implements OnInit {
       .subscribe(
           data => {
             this.players = data;
-            this.isLoading = false;
+            this.arePlayersLoading = false;
           },
           error => {
             this.errorOccurred = true;
           }
+    )
+    this._playerClient.getPlayers()
+      .pipe(take(1))
+      .subscribe(
+        data => {
+          this.playerDetails = data;
+          this.arePlayerDetailssLoading = false;
+        },
+        error => {
+          this.errorOccurred = true;
+        }
       )
   }
 
@@ -47,26 +68,21 @@ export class PercentageGraphComponent implements OnInit {
   xLabelScale = 4;
   yLabelScale = 3;
 
-  // TODO - TH - See why this isn't working
-  //get xMinAsDate(): Date {
-  //  return this.isLoading
-  //    ? new Date()
-  //    : this._dateService.getDateFromRelativeDay(this.xMin);
-  //}
+  get xMinAsDate(): Date {
+    return this._dateService.getDateFromRelativeDay(this.xMin);
+  }
 
-  //set xMinAsDate(date: Date) {
-  //  this.xMin = this._dateService.getRelativeDay(date)
-  //}
+  set xMinAsDate(date: Date) {
+    this.xMin = this._dateService.getRelativeDay(new Date(date));
+  }
 
-  //get xMaxAsDate(): Date {
-  //  return this.isLoading
-  //    ? new Date()
-  //    : this._dateService.getDateFromRelativeDay(this.xMax);
-  //}
+  get xMaxAsDate(): Date {
+    return this._dateService.getDateFromRelativeDay(this.xMax);
+  }
 
-  //set xMaxAsDate(date: Date) {
-  //  this.xMax = this._dateService.getRelativeDay(date)
-  //}
+  set xMaxAsDate(date: Date) {
+    this.xMax = this._dateService.getRelativeDay(new Date(date))
+  }
 
   get xGridlines(): number[] {
     const xRange = this.xMax - this.xMin;
@@ -90,6 +106,10 @@ export class PercentageGraphComponent implements OnInit {
       gridlines.push(yCoord);
     }
     return gridlines;
+  }
+
+  get visiblePlayers(): GraphPlayerDto[] {
+    return this.players.filter(p => !this.hiddenPlayers.includes(p.playerId));
   }
 
   getWinPercentage(graphPoint: GraphPointDto): number {
@@ -124,8 +144,14 @@ export class PercentageGraphComponent implements OnInit {
     return this._dateService.getRelativeDay(date);
   }
 
-  getHue(index: number): number { // TODO - TH - Move this out of here, make it generic
+  getColour(index: number): string {
+    const hue = this.getHue(index);
+    return `hsl(${hue},${this.DATALINE_HSL_SATURATION},${this.DATALINE_HSL_LUMINOSITY})`;
+  }
+
+  getHue(id: number): number { // TODO - TH - Move this out of here, make it generic
     const playerCount = this.playerCount;
+    const index = this.playerDetails.map(p => p.id).indexOf(id);
 
     if (playerCount === 0) {
       return 0;
@@ -134,15 +160,38 @@ export class PercentageGraphComponent implements OnInit {
     return this.DEGREES_IN_A_CIRCLE * (index / playerCount);
   }
 
+  getInitials(id: number): string { // TODO - TH - Move this to a new player service
+    const players = this.playerDetails.filter(pd => pd.id === id);
+    if (players.length === 1) {
+      const player = players[0];
+      return player.initials
+    }
+    console.log(id);
+    console.log(this.playerDetails);
+    return this.UNKNOWN_PLAYER_INITIALS_STRING;
+  }
+
   getXLabel(relativeDay: number): Date {
     return this._dateService.getDateFromRelativeDay(relativeDay);
   }
 
+  isHidden(id: number): boolean {
+    return this.hiddenPlayers.includes(id);
+  }
+
+  togglePlayerVisibility(id: number): void {
+    if (this.isHidden(id)) {
+      this.hiddenPlayers = this.hiddenPlayers.filter(hp => hp !== id);
+    } else {
+      this.hiddenPlayers.push(id);
+    }
+  }
+
   private get playerCount(): number {
-    if (isNullOrUndefined(this.players)) {
+    if (isNullOrUndefined(this.playerDetails)) {
       return 0
     }
-    return this.players.length;
+    return this.playerDetails.length;
   }
 
   private get oneWeekAgoToday(): number {

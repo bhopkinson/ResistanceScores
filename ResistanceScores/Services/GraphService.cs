@@ -75,7 +75,9 @@ namespace ResistanceScores.Services
                 graphPlayers.Add(graphPlayer);
             }
 
-            return graphPlayers;
+            return graphPlayers
+                .OrderBy(o => o.PlayerId)
+                .ToList();
         }
 
         //private Hello GroupByDate(List<GamePlayerWinDto> gamePlayerWins) {

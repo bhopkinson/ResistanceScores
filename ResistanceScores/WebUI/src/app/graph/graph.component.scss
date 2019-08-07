@@ -1,14 +1,14 @@
 .gridline {
-  stroke: black;
+  stroke: var(--grey-xdark);
   stroke-width: 0.5;
 }
 
 .special {
-  stroke: red;
+  stroke: var(--grey-dark);
 }
 
 .graph-background {
-  fill: #f2f2f2;
+  fill: white;
 }
 
 .data-1 {
