@@ -6,14 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient } from './services/web-api.service.generated';
+import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient, GraphClient } from './services/web-api.service.generated';
 import { PlayerEditComponent } from './pages/player/player-edit/player-edit.component';
 import { PlayerDetailComponent } from './pages/player/player-detail/player-detail.component';
 import { PlayerListingComponent } from './pages/player/player-listing/player-listing.component';
 import { PlayerCreateComponent } from './pages/player/player-edit/player-create.component';
 import { PlayerComponent } from './pages/player/player.component';
-import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
-import { AllTimeLeaderboardComponent } from './pages/leaderboard/all-time-leaderboard/all-time-leaderboard.component';
+import { LeaderboardComponent } from './shared/leaderboard/leaderboard.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { GameComponent } from './pages/game/game.component';
@@ -26,6 +25,19 @@ import { ButtonMultiselectOptionComponent } from './shared/button-multiselect-op
 import { DayReviewComponent } from './shared/day-review/day-review.component';
 import { ButtonSelectComponent } from './shared/button-select/button-select.component';
 import { ButtonSelectOptionComponent } from './shared/button-select-option/button-select-option.component';
+import { PercentageGraphComponent } from './shared/percentage-graph/percentage-graph.component';
+import { ChartsModule } from 'ng2-charts';
+import { GraphComponent } from './graph/graph.component';
+import { GraphXGridlineComponent } from './graph/graph-x-gridline.component';
+import { GraphXTickComponent } from './graph/graph-x-tick.component';
+import { GraphYGridlineComponent } from './graph/graph-y-gridline.component';
+import { GraphYTickComponent } from './graph/graph-y-tick.component';
+import { GraphDatalineComponent } from './graph/graph-dataline.component';
+import { GraphXLabelComponent } from './graph/graph-x-label.component';
+import { GraphYLabelComponent } from './graph/graph-y-label.component';
+import { GameOverviewComponent } from './shared/game-overview/game-overview.component';
+import { HomeComponent } from './pages/home/home.component';
+import { StreakTableComponent } from './shared/streak-table/streak-table.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -41,7 +53,6 @@ export function getBaseUrl() {
     PlayerCreateComponent,
     PlayerComponent,
     LeaderboardComponent,
-    AllTimeLeaderboardComponent,
     GameComponent,
     GameEditComponent,
     GameListingComponent,
@@ -52,6 +63,18 @@ export function getBaseUrl() {
     DayReviewComponent,
     ButtonSelectComponent,
     ButtonSelectOptionComponent,
+    PercentageGraphComponent,
+    GraphComponent,
+    GraphXGridlineComponent,
+    GraphYGridlineComponent,
+    GraphDatalineComponent,
+    GraphXTickComponent,
+    GraphYTickComponent,
+    GraphXLabelComponent,
+    GraphYLabelComponent,
+    GameOverviewComponent,
+    HomeComponent,
+    StreakTableComponent
   ],
   imports: [
     BrowserModule,
@@ -59,9 +82,10 @@ export function getBaseUrl() {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ChartsModule
   ],
-  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient],
+  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient, GraphClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

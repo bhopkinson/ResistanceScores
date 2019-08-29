@@ -15,7 +15,7 @@ namespace ResistanceScores.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -39,6 +39,8 @@ namespace ResistanceScores.Migrations
                     b.Property<int>("GameId");
 
                     b.Property<int>("PlayerId");
+
+                    b.Property<int>("Role");
 
                     b.Property<bool>("WasResistance");
 
@@ -75,12 +77,12 @@ namespace ResistanceScores.Migrations
             modelBuilder.Entity("ResistanceScores.Models.GamePlayer", b =>
                 {
                     b.HasOne("ResistanceScores.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("Players")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ResistanceScores.Models.Player", "Player")
-                        .WithMany()
+                        .WithMany("Games")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

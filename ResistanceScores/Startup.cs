@@ -24,7 +24,7 @@ namespace ResistanceScores
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerDocument();
 
             services.AddDbContext<AppDbContext>
@@ -32,6 +32,7 @@ namespace ResistanceScores
 
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<ILeaderboardService, LeaderboardService>();
 
             // In production, the Angular files will be served from this directory
@@ -50,6 +51,8 @@ namespace ResistanceScores
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
             }
             else
             {
@@ -58,20 +61,12 @@ namespace ResistanceScores
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ServeUnknownFileTypes = true,
-                ContentTypeProvider = provider
-            });
 
             app.UseSpaStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
                 ContentTypeProvider = provider
             });
-
-            app.UseSwagger();
-            app.UseSwaggerUi3();
 
             app.UseMvc(routes =>
             {

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GameClient, GameUpdateDto, PlayerListingDto, PlayerClient, GamePlayerUpdateDto } from '../../../services/web-api.service.generated';
+import { GameClient, GameUpdateDto, PlayerListingDto, PlayerClient, GamePlayerUpdateDto, Role } from '../../../services/web-api.service.generated';
 import { take, retry } from 'rxjs/operators';
 
 @Component({
@@ -23,11 +23,16 @@ export class GameEditComponent implements OnInit {
   isLoading = false;
   gameId = 0;
 
-  date = new Date();
+  date = new Date(new Date().setHours(0, 0, 0));
   players: PlayerListingDto[] = [];
   selectedPlayerIds: number[] = [];
   spyIds: number[] = [];
+  chiefIds: number[] = [];
+  hunterIds: number[] = [];
+  defectorIds: number[] = [];
+  dummyId = 0;
   resistanceWin: boolean = null;
+  hasExtraDetails = false;
 
   get selectedPlayers(): PlayerListingDto[] {
     return this.players
@@ -59,6 +64,21 @@ export class GameEditComponent implements OnInit {
           this.spyIds = g.players
             .filter(p => !p.wasResistance)
             .map(p => p.id);
+          this.chiefIds = g.players
+            .filter(p => p.role === Role.Chief)
+            .map(p => p.id);
+          this.hunterIds = g.players
+            .filter(p => p.role === Role.Hunter)
+            .map(p => p.id);
+          this.defectorIds = g.players
+            .filter(p => p.role === Role.Defector)
+            .map(p => p.id);
+          g.players
+            .filter(p => p.role === Role.Dummy)
+            .forEach(p => this.dummyId = p.id);
+          if (this.hunterIds.length > 0) {
+            this.hasExtraDetails = true;
+          }
           this.resistanceWin = g.resistanceWin;
           this.isLoading = false;
         },
@@ -71,6 +91,22 @@ export class GameEditComponent implements OnInit {
     this.resistanceWin = resWin;
   }
 
+  role(playerId: number): Role {
+    if (!this.hasExtraDetails) {
+      return Role.None;
+    } else if (this.chiefIds.includes(playerId)) {
+      return Role.Chief;
+    } else if (this.hunterIds.includes(playerId)) {
+      return Role.Hunter;
+    } else if (this.dummyId === playerId) {
+      return Role.Dummy;
+    } else if (this.defectorIds.includes(playerId)) {
+      return Role.Defector;
+    } else {
+      return Role.Regular;
+    }
+  }
+
   get isValid(): boolean {
     const playerCount = this.selectedPlayerIds.length;
     const spyCount = this.spyIds.length;
@@ -80,20 +116,20 @@ export class GameEditComponent implements OnInit {
       return false;
     }
 
-    const spyCounts: { [key: number]: number } = {
-      5: 2,
-      6: 2,
-      7: 3,
-      8: 3,
-      9: 3,
-      10: 4,
-      11: 4,
-    }
+    //const spyCounts: { [key: number]: number } = {
+    //  5: 2,
+    //  6: 2,
+    //  7: 3,
+    //  8: 3,
+    //  9: 3,
+    //  10: 4,
+    //  11: 4,
+    //}
 
-    if (spyCounts[playerCount] !== spyCount) {
-      alert(`Games with ${playerCount} players must have ${spyCounts[playerCount]} spies`);
-      return false;
-    }
+    //if (spyCounts[playerCount] !== spyCount) {
+    //  alert(`Games with ${playerCount} players must have ${spyCounts[playerCount]} spies`);
+    //  return false;
+    //}
 
     return true;
   }
@@ -103,7 +139,8 @@ export class GameEditComponent implements OnInit {
     if (this.isValid) {
       const gamePlayers = this.selectedPlayers.map(p => new GamePlayerUpdateDto({
         id: p.id,
-        wasResistance: !this.spyIds.includes(p.id)
+        wasResistance: !this.spyIds.includes(p.id),
+        role: this.role(p.id)
       }))
 
       const game = new GameUpdateDto({

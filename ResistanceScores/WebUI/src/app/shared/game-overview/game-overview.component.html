@@ -1,0 +1,29 @@
+<h1>Game overview</h1>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Res wins</th>
+      <th>Spy wins</th>
+      <th>Total games</th>
+      <th>% Res Win</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="!isLoading && !errorOccurred">
+    <tr *ngFor="let games of gameOverview; let i = index">
+      <td>{{ i === 0 ? 'All' : i+4+'P'}}</td>
+      <td>{{games.resistanceWins}}</td>
+      <td>{{getLossCount(games)}}</td>
+      <td>{{games.totalGames}}</td>
+      <td>{{getWinPercentage(games) | number: '2.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="no-content-message" *ngIf="isLoading && !errorOccurred">
+   Loading...
+</div>
+<div class="no-content-message error-message" *ngIf="errorOccurred" (dblclick)="reloadData()">
+  An error has occurred.
+  <br />
+  Double-tap to reload.
+</div>

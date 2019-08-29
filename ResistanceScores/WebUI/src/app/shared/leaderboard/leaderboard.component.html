@@ -1,0 +1,52 @@
+<h1>Leaderboard</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Wins</th>
+      <th>Losses</th>
+      <th>Total games</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let player of leaderboard">
+      <td>{{player.initials}}</td>
+      <td>{{player.wins}}</td>
+      <td>{{getLossCount(player)}}</td>
+      <td>{{player.totalGames}}</td>
+      <td>{{getWinPercentage(player) | number: '2.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="no-content-message" *ngIf="isLoading && !errorOccurred">
+  Loading...
+</div>
+<div class="no-content-message error-message" *ngIf="errorOccurred" (dblclick)="reloadData()">
+  An error has occurred.
+  <br />
+  Double-tap to reload.
+</div>
+
+<app-button-select [(ngModel)]="teamFilter">
+  <app-button-select-option [value]="Team.None">All games</app-button-select-option>
+  <app-button-select-option [value]="Team.Resistance">Just resistance</app-button-select-option>
+  <app-button-select-option [value]="Team.Spy">Just spies</app-button-select-option>
+</app-button-select>
+
+<app-button-select [(ngModel)]="timescaleFilter">
+  <app-button-select-option [value]="Timescale.AllTime">All time</app-button-select-option>
+  <app-button-select-option [value]="Timescale.Last7Days">Last 7 days</app-button-select-option>
+  <app-button-select-option [value]="Timescale.Last30Days">Last 30 days</app-button-select-option>
+</app-button-select>
+
+<app-button-select [(ngModel)]="noOfPlayersFilter">
+  <app-button-select-option [value]="4">All sizes</app-button-select-option>
+  <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P</app-button-select-option>
+</app-button-select>
+
+<app-button-select [(ngModel)]="asOfWhenFilter">
+  <app-button-select-option [value]="0">As of today</app-button-select-option>
+  <app-button-select-option [value]="1">As of yesterday</app-button-select-option>
+</app-button-select>

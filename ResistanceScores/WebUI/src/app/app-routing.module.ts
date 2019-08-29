@@ -5,13 +5,12 @@ import { PlayerDetailComponent } from './pages/player/player-detail/player-detai
 import { PlayerEditComponent } from './pages/player/player-edit/player-edit.component';
 import { PlayerCreateComponent } from './pages/player/player-edit/player-create.component';
 import { PlayerComponent } from './pages/player/player.component';
-import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
-import { AllTimeLeaderboardComponent } from './pages/leaderboard/all-time-leaderboard/all-time-leaderboard.component';
 import { GameComponent } from './pages/game/game.component';
 import { GameEditComponent } from './pages/game/game-edit/game-edit.component';
 import { GameListingComponent } from './pages/game/game-listing/game-listing.component';
 import { GameDetailComponent } from './pages/game/game-detail/game-detail.component';
 import { GameCreateComponent } from './pages/game/game-edit/game-create.component';
+import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
   {
@@ -38,11 +37,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: LeaderboardComponent,
-    children: [
-      { path: '', component: AllTimeLeaderboardComponent },
-      { path: '**', redirectTo: '', pathMatch: 'full' },
-    ]
+    component: HomeComponent
   },
 
 ];

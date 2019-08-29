@@ -1,0 +1,37 @@
+.no-content-message {
+  padding: 2.5rem 0;
+  color: var(--grey-xdark);
+}
+
+.error-message {
+  font-style: italic;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  margin: .5rem;
+
+  .legend-item {
+    flex: 0 0 15%;
+    display: inline-block;
+    margin: 0 .5rem;
+
+    > * {
+      vertical-align: middle;
+    }
+
+    &.hidden{
+      opacity: 0.5;
+    }
+
+  }
+
+  .legend-dot {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    margin: 0 0.25rem;
+  }
+}

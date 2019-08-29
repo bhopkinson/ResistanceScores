@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllTimeLeaderboardComponent } from './all-time-leaderboard.component';
+import { GraphComponent } from './graph.component';
 
-describe('AllTimeLeaderboardComponent', () => {
-  let component: AllTimeLeaderboardComponent;
-  let fixture: ComponentFixture<AllTimeLeaderboardComponent>;
+describe('GraphComponent', () => {
+  let component: GraphComponent;
+  let fixture: ComponentFixture<GraphComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AllTimeLeaderboardComponent ]
+      declarations: [ GraphComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AllTimeLeaderboardComponent);
+    fixture = TestBed.createComponent(GraphComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
