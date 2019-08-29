@@ -37,6 +37,7 @@ import { GraphXLabelComponent } from './graph/graph-x-label.component';
 import { GraphYLabelComponent } from './graph/graph-y-label.component';
 import { GameOverviewComponent } from './shared/game-overview/game-overview.component';
 import { HomeComponent } from './pages/home/home.component';
+import { StreakTableComponent } from './shared/streak-table/streak-table.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -72,7 +73,8 @@ export function getBaseUrl() {
     GraphXLabelComponent,
     GraphYLabelComponent,
     GameOverviewComponent,
-    HomeComponent
+    HomeComponent,
+    StreakTableComponent
   ],
   imports: [
     BrowserModule,
