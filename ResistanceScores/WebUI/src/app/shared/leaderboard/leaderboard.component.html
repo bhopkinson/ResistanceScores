@@ -9,7 +9,7 @@
       <th>%</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody *ngIf="!isLoading && !errorOccurred">
     <tr *ngFor="let player of leaderboard">
       <td>{{player.initials}}</td>
       <td>{{player.wins}}</td>
@@ -23,10 +23,10 @@
 <div class="no-content-message" *ngIf="isLoading && !errorOccurred">
   Loading...
 </div>
-<div class="no-content-message error-message" *ngIf="errorOccurred" (dblclick)="reloadData()">
+<div class="no-content-message error-message" *ngIf="errorOccurred" (click)="reloadData()">
   An error has occurred.
   <br />
-  Double-tap to reload.
+  Click here to reload.
 </div>
 
 <app-button-select [(ngModel)]="teamFilter">
@@ -37,8 +37,8 @@
 
 <app-button-select [(ngModel)]="timescaleFilter">
   <app-button-select-option [value]="Timescale.AllTime">All time</app-button-select-option>
-  <app-button-select-option [value]="Timescale.Last7Days">Last 7 days</app-button-select-option>
-  <app-button-select-option [value]="Timescale.Last30Days">Last 30 days</app-button-select-option>
+  <app-button-select-option [value]="Timescale.Last7Days">This week</app-button-select-option>
+  <app-button-select-option [value]="Timescale.Last30Days">This month</app-button-select-option>
 </app-button-select>
 
 <app-button-select [(ngModel)]="noOfPlayersFilter">

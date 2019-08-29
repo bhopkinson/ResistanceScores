@@ -21,8 +21,8 @@
 <div class="no-content-message" *ngIf="isLoading && !errorOccurred">
   Loading...
 </div>
-<div class="no-content-message error-message" *ngIf="errorOccurred" (dblclick)="reloadData()">
+<div class="no-content-message error-message" *ngIf="errorOccurred" (click)="reloadData()">
   An error has occurred.
   <br />
-  Double-tap to reload.
+  Click here to reload.
 </div>
