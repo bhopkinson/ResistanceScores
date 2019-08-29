@@ -12,4 +12,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
+  clickCount = 0;
+
+  incrementClickCount = () => { this.clickCount++; console.log(this.clickCount) }
+
 }
