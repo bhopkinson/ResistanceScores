@@ -1,0 +1,14 @@
+.reload-button {
+  all: unset;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid var(--grey-dark);
+  color: var(--grey-xdark);
+  background-color: var(--subtle-purple-light);
+  border-radius: 5px;
+
+  &:hover {
+    background-color: var(--subtle-purple);
+  }
+}

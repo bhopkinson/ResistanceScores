@@ -52,14 +52,14 @@ namespace ResistanceScores.Controllers
             return Ok(leaderboard);
         }
 
-        //// TODO: Move to separate controller
-        //[HttpGet("Streaks")]
-        //[ProducesResponseType(typeof(List<StreakDto>), StatusCodes.Status200OK)]
-        //public async Task<ActionResult<List<StreakDto>>> GetStreaks()
-        //{
-        //    var streaks = await _leaderboardService.GetStreaks();
-        //    return Ok(streaks);
-        //}
+        // TODO: Move to separate controller
+        [HttpGet("Streaks")]
+        [ProducesResponseType(typeof(List<StreakDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<StreakDto>>> GetStreaks()
+        {
+            var streaks = await _leaderboardService.GetStreaks();
+            return Ok(streaks);
+        }
 
         //[HttpGet("{id}")]
         //[ProducesResponseType(typeof(GameDetailDto), StatusCodes.Status200OK)]
