@@ -38,6 +38,7 @@ import { GraphYLabelComponent } from './graph/graph-y-label.component';
 import { GameOverviewComponent } from './shared/game-overview/game-overview.component';
 import { HomeComponent } from './pages/home/home.component';
 import { StreakTableComponent } from './shared/streak-table/streak-table.component';
+import { WinHistoryComponent } from './pages/win-history/win-history.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -74,7 +75,8 @@ export function getBaseUrl() {
     GraphYLabelComponent,
     GameOverviewComponent,
     HomeComponent,
-    StreakTableComponent
+    StreakTableComponent,
+    WinHistoryComponent
   ],
   imports: [
     BrowserModule,

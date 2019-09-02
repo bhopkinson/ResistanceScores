@@ -11,6 +11,7 @@ import { GameListingComponent } from './pages/game/game-listing/game-listing.com
 import { GameDetailComponent } from './pages/game/game-detail/game-detail.component';
 import { GameCreateComponent } from './pages/game/game-edit/game-create.component';
 import { HomeComponent } from './pages/home/home.component';
+import { WinHistoryComponent } from './pages/win-history/win-history.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
       { path: 'detail/:id', component: GameDetailComponent },
       { path: '**', redirectTo: '', pathMatch: 'full' },
     ]
+  },
+  {
+    path: 'win-history',
+    component: WinHistoryComponent
   },
   {
     path: '',

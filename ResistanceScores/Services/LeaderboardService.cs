@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -160,6 +160,31 @@ namespace ResistanceScores.Services
                 }).ToList()
             })
             .ToListAsync();
+
+            var players = games.SelectMany(x => x.Players).Select(x => x.Player).Distinct().ToList();
+
+            return new GameListDto
+            {
+                Players = players,
+                Games = games
+            };
+        }
+
+        public async Task<GameListDto> GetWinHistory()
+        {
+            var games = await _appDbContext
+                .Games
+                .Include(x => x.Players)
+                .ThenInclude(x => x.Player)
+                .Select(g => new GameSummaryDto
+                {
+                    Players = g.Players.Select(p => new PlayerWinDto
+                    {
+                        Player = p.Player.Initials,
+                        Win = (p.WasResistance && g.ResistanceWin) || (!p.WasResistance && !g.ResistanceWin)
+                    }).ToList()
+                })
+                .ToListAsync();
 
             var players = games.SelectMany(x => x.Players).Select(x => x.Player).Distinct().ToList();
 

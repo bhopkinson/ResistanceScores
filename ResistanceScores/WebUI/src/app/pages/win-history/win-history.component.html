@@ -1,0 +1,26 @@
+<a class="left-sticky" [routerLink]="['/']">Back to Main Page</a>
+<div class="title left-sticky">
+  <h1 class="left-sticky">Win History</h1>
+</div>
+<div *ngIf="!isLoading">
+  <table *ngIf="summaryGames.length > 0">
+    <tr *ngFor="let player of summaryPlayers;">
+      <th class="left-sticky">{{player}}</th>
+      <td class="game-player-dot__container" *ngFor="let game of summaryGames">
+        <span class="game-player-dot"
+              [class.game-player-dot--win]="getWinOrLoss(player, game) === true"
+              [class.game-player-dot--loss]="getWinOrLoss(player, game) === false">
+        </span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="no-content-message" *ngIf="isLoading && !errorOccurred">
+  Loading...
+</div>
+<div class="no-content-message error-message" *ngIf="errorOccurred" (click)="reloadData()">
+  An error has occurred.
+  <br />
+  Click here to reload.
+</div>

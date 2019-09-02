@@ -53,6 +53,15 @@ namespace ResistanceScores.Controllers
         }
 
         // TODO: Move to separate controller
+        [HttpGet("WinHistory")]
+        [ProducesResponseType(typeof(GameListDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<GameListDto>> GetWinHistory()
+        {
+            var leaderboard = await _leaderboardService.GetWinHistory();
+            return Ok(leaderboard);
+        }
+
+        // TODO: Move to separate controller
         [HttpGet("Streaks")]
         [ProducesResponseType(typeof(List<StreakDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<StreakDto>>> GetStreaks()
