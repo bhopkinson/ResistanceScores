@@ -1,15 +1,28 @@
 <h1>Streaks</h1>
 <table>
-  <tr>
-    <th>Player</th>
-    <th>Max wins</th>
-    <th>Max losses</th>
-    <th>Current</th>
-  </tr>
-  <tr>
-    <td>IT</td>
-    <td>456</td>
-    <td>456</td>
-    <td>456</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Max wins</th>
+      <th>Max losses</th>
+      <th>Current</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="!isLoading && !errorOccurred">
+    <tr *ngFor="let player of playerStreaks; let i = index">
+      <td>{{ getPlayerInitials(player.playerId) }}</td>
+      <td>{{ player.maxWins }}</td>
+      <td>{{ player.maxLosses }}</td>
+      <td>{{ player.currentWinOrLoss ? '+' : '-' }}{{ player.current }}</td>
+    </tr>
+  </tbody>
 </table>
+<button class="reload-button" *ngIf="!isLoading && !errorOccurred" (click)="reloadData()">Reload</button>
+<div class="no-content-message" *ngIf="isLoading && !errorOccurred">
+  Loading...
+</div>
+<div class="no-content-message error-message" *ngIf="errorOccurred" (click)="reloadData()">
+  An error has occurred.
+  <br />
+  Click here to reload.
+</div>

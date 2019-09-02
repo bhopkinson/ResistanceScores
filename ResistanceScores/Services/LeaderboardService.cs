@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -38,15 +38,15 @@ namespace ResistanceScores.Services
                     teamClause = g => true;
                     break;
             }
-
             Expression<Func<GamePlayer, bool>> timescaleClause;
+            var thisMonday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             switch (queryOptions.Timescale)
             {
                 case Enums.Timescale.Last30Days:
-                    timescaleClause = g => DateTime.Now < g.Game.Date.AddDays(30);
+                    timescaleClause = g => DateTime.Now.Month == g.Game.Date.Month && DateTime.Now.Year == g.Game.Date.Year;
                     break;
                 case Enums.Timescale.Last7Days:
-                    timescaleClause = g => DateTime.Now < g.Game.Date.AddDays(7);
+                    timescaleClause = g => thisMonday <= g.Game.Date;
                     break;
                 default:
                     timescaleClause = g => true;
@@ -170,14 +170,96 @@ namespace ResistanceScores.Services
             };
         }
 
-        //public async Task<List<StreakDto>> GetStreaks()
-        //{
-        //    var query = _appDbContext
-        //        .Players
-        //        .Include(x => x.Games)
-        //        .ThenInclude(x => x.Game)
-        //        .Select;
+        public async Task<List<StreakDto>> GetStreaks()
+        {
+            var gamePlayers = _appDbContext.GamePlayers
+                            .Include(gp => gp.Game)
+                            .Include(gp => gp.Player);
 
-        //}
+            var playerDateWinList = await gamePlayers
+                .Select(o => new
+                {
+                    Player = o.PlayerId,
+                    o.GameId,
+                    Win = o.WasResistance == o.Game.ResistanceWin,
+                })
+                .ToListAsync();
+
+            var playersWinHistories = playerDateWinList
+                .GroupBy(
+                    o => o.Player,
+                    o => new WinHistoryItem { Win = o.Win, GameId = o.GameId });
+
+            var streakDtos = new List<StreakDto>();
+
+            foreach (var playerWinHistory in playersWinHistories)
+            {
+                var playerId = playerWinHistory.Key;
+
+                var winHistory = playerWinHistory.ToList();
+                var streakHistory = TransformWinHistoryToStreakHistory(winHistory);
+
+                var winStreaks = streakHistory.Where(s => s.IsAWinStreak).Select(s => s.Streak);
+                var lossStreaks = streakHistory.Where(s => !s.IsAWinStreak).Select(s => s.Streak);
+                var currentStreak = streakHistory.Last();
+
+                var streakDto = new StreakDto
+                {
+                    PlayerId = playerId,
+                    MaxWins = winStreaks.Max(),
+                    MaxLosses = lossStreaks.Max(),
+                    Current = currentStreak.Streak,
+                    CurrentWinOrLoss = currentStreak.IsAWinStreak,
+                };
+
+                streakDtos.Add(streakDto);
+            }
+            return streakDtos
+                .OrderByDescending(p => (p.CurrentWinOrLoss ? +1 : -1) * p.Current)
+                .ToList();
+        }
+
+        private List<StreakHistoryItem> TransformWinHistoryToStreakHistory(List<WinHistoryItem> winHistory)
+        {
+            var streakHistory = new List<StreakHistoryItem>();
+            var currentStreak = 0;
+            var wasLastGameAWin = default(bool);
+            var isFirstGame = true;
+
+            foreach (var game in winHistory)
+            {
+                var wasAWin = game.Win;
+                var doesContinueStreak = wasAWin == wasLastGameAWin && !isFirstGame;
+
+                currentStreak = doesContinueStreak
+                    ? currentStreak + 1
+                    : 1;
+
+                streakHistory.Add(new StreakHistoryItem
+                {
+                    GameId = game.GameId,
+                    Streak = currentStreak,
+                    IsAWinStreak = wasAWin
+                });
+
+                isFirstGame = false;
+                wasLastGameAWin = wasAWin;
+            }
+
+            return streakHistory;
+        }
+
+        public class WinHistoryItem
+        {
+            public int GameId { get; set; }
+            public bool Win { get; set; }
+        }
+
+        private class StreakHistoryItem
+        {
+            public int GameId { get; set; }
+            public int Streak { get; set; }
+            public bool IsAWinStreak { get; set; }
+        }
     }
 }

@@ -1,5 +1,5 @@
 <div *ngIf="!errorOccurred">
-  <div *ngIf="!isLoading">
+  <div class="game-listing" *ngIf="!isLoading">
     <p><a [routerLink]="['/']">Back to Main Page</a></p>
     <p><a [routerLink]="['/games/create']">Create new game</a></p>
     <table>
@@ -10,17 +10,15 @@
           <th>Win</th>
           <th>Players</th>
           <th>Edit</th>
-          <th>Details</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let game of games">
           <td>{{game.id}}</td>
           <td>{{game.date | date}}</td>
-          <td>{{game.resistanceWin ? 'RES' : 'SPY'}}</td>
-          <td>{{game.players}}</td>
+          <td [class.res-win]="game.resistanceWin" [class.spy-win]="!game.resistanceWin">{{game.resistanceWin ? 'RES' : 'SPY'}}</td>
+          <td>{{game.players && game.players.length}}</td>
           <td><a [routerLink]="['/games/edit/' + game.id]">Edit</a></td>
-          <td><a [routerLink]="['/games/detail/' + game.id]">Details</a></td>
         </tr>
       </tbody>
     </table>
