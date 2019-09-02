@@ -27,13 +27,31 @@ td, th {
   width: var(--cell-width);
 }
 
-tr td:first-of-type {
-  padding-left: var(--cell-width);
+tr {
+  td:first-of-type {
+    padding-left: var(--cell-width);
+  }
+
+  td:last-of-type {
+    padding-right: var(--cell-width);
+  }
 }
 
 th {
   position: fixed;
   background-color: var(--white);
+
+  &.left-th {
+    left: 0;
+  }
+
+  &.right-th {
+    right: 0;
+  }
+}
+
+td.first-of-month {
+  border-left: 1px solid grey;
 }
 
 .title {

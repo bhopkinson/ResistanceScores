@@ -7,6 +7,7 @@ namespace ResistanceScores.Models.api
 {
     public class GameSummaryDto
     {
+        public int Id;
         public IList<PlayerWinDto> Players;
     }
 }

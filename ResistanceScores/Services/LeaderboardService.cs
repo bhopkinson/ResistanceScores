@@ -157,7 +157,8 @@ namespace ResistanceScores.Services
                 {
                     Player = p.Player.Initials,
                     Win = (p.WasResistance && g.ResistanceWin) || (!p.WasResistance && !g.ResistanceWin)
-                }).ToList()
+                }).ToList(),
+                Id = g.Id
             })
             .ToListAsync();
 
@@ -182,7 +183,8 @@ namespace ResistanceScores.Services
                     {
                         Player = p.Player.Initials,
                         Win = (p.WasResistance && g.ResistanceWin) || (!p.WasResistance && !g.ResistanceWin)
-                    }).ToList()
+                    }).ToList(),
+                    Id = g.Id
                 })
                 .ToListAsync();
 
