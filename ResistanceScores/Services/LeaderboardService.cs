@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -39,14 +39,14 @@ namespace ResistanceScores.Services
                     break;
             }
             Expression<Func<GamePlayer, bool>> timescaleClause;
-            var thisMonday = DateTime.Now.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+            var thisMonday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             switch (queryOptions.Timescale)
             {
                 case Enums.Timescale.Last30Days:
                     timescaleClause = g => DateTime.Now.Month == g.Game.Date.Month && DateTime.Now.Year == g.Game.Date.Year;
                     break;
                 case Enums.Timescale.Last7Days:
-                    timescaleClause = g => thisMonday < g.Game.Date;
+                    timescaleClause = g => thisMonday <= g.Game.Date;
                     break;
                 default:
                     timescaleClause = g => true;
