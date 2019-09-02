@@ -109,6 +109,7 @@ namespace ResistanceScores.Services
                     ResistanceWin = o.ResistanceWin,
                     Players = o.Players.Select(p => p.Player.Initials).ToList()
                 })
+                .OrderByDescending(o => o.Id)
                 .ToListAsync();
         }
 
