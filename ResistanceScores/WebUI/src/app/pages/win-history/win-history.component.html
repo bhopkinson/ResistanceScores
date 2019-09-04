@@ -16,6 +16,9 @@
       </td>
       <th class="right-th">{{player}}</th>
     </tr>
+    <tr>
+      <td *ngFor="let month of gameMonths;" [attr.colspan]="month.gameCount">Hey</td>
+    </tr>
   </table>
 </div>
 

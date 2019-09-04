@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LeaderboardClient, GameClient, GameSummaryDto, GameListingDto } from 'src/app/services/web-api.service.generated';
 import { take } from 'rxjs/operators';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-win-history',
@@ -17,7 +18,9 @@ export class WinHistoryComponent implements OnInit {
   public isWinHistoryLoading = true;
   public areGamesLoading = true;
   public errorOccurred = false;
-  private _firstGamesOfMonths: number[] = [];
+
+  private gameMonths: { identifier: string, firstGameId: number, gameCount: number, label: string }[] = [];
+  private MONTH_NAMES = []
 
   ngOnInit() {
     this._loadWinHistory();
@@ -35,15 +38,52 @@ export class WinHistoryComponent implements OnInit {
   }
 
   getIsFirstOfMonth(gameId: number): boolean {
-    return this._firstGamesOfMonths.includes(gameId);
+    return this.gameMonths.map(gm => gm.firstGameId).includes(gameId);
+  }
+
+  getMonthLabel(gameId: number): string {
+    const gameMonthSingleton = this.gameMonths.filter(gm => gm.firstGameId === gameId);
+    return gameMonthSingleton.length > 0
+      ? gameMonthSingleton[0].label
+      : '';
   }
 
   get isLoading(): boolean {
     return this.isWinHistoryLoading || this.areGamesLoading;
   }
 
-  private _calculateFirstOfMonths(): void {
-    // TODO
+  private _populateGameMonths(): void {
+    let id: number;
+    let identifier: string;
+
+    this.games.forEach((g) => {
+      id = g.id;
+      identifier = this._getIdentifierFromDate(g.date);
+
+      if (this._gameMonthAlreadyExists(identifier)) {
+        const gameMonth = this._getGameMonth(identifier);
+        gameMonth.gameCount++;
+      } else {
+        const label = g.date.toLocaleString('default', { month: 'long' });
+        this.gameMonths.push({ identifier, firstGameId: id, gameCount: 1, label });
+      }
+    })
+    console.log(this.gameMonths);
+  }
+
+  private _gameMonthAlreadyExists(identifier: string): boolean {
+    return this.gameMonths.filter(gm => gm.identifier === identifier).length > 0;
+  }
+
+  private _getIdentifierFromDate(date: Date): string {
+    return `${ date.getMonth() }/${ date.getFullYear() }`;
+  }
+
+  private _getGameMonth(identifier: string): { identifier: string, firstGameId: number, gameCount: number, label: string } | null {
+    const gameMonthSingleton = this.gameMonths.filter(gm => gm.identifier === identifier);
+    return gameMonthSingleton.length > 0
+      ? gameMonthSingleton[0]
+      : null;
   }
 
   private _loadWinHistory(): void {
@@ -66,6 +106,7 @@ export class WinHistoryComponent implements OnInit {
       .subscribe(
         games => {
           this.games = games;
+          this._populateGameMonths();
           this.areGamesLoading = false;
         },
         error => { this.errorOccurred = true; })
