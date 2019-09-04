@@ -6,18 +6,22 @@
   <table *ngIf="summaryGames.length > 0">
     <tr *ngFor="let player of summaryPlayers;">
       <th class="left-th">{{player}}</th>
+      <td></td>
       <td class="game-player-dot__container"
           [class.first-of-month]="getIsFirstOfMonth(game.id)"
+          [title]="game.id"
+          (click)="log(game)"
           *ngFor="let game of summaryGames">
         <span class="game-player-dot"
               [class.game-player-dot--win]="getWinOrLoss(player, game) === true"
               [class.game-player-dot--loss]="getWinOrLoss(player, game) === false">
         </span>
       </td>
+      <td></td>
       <th class="right-th">{{player}}</th>
     </tr>
     <tr>
-      <td *ngFor="let month of gameMonths;" [attr.colspan]="month.gameCount">Hey</td>
+      <td *ngFor="let month of gameMonths;" [attr.colspan]="month.gameCount" class="month-label">Hey</td>
     </tr>
   </table>
 </div>

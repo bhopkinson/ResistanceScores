@@ -186,6 +186,7 @@ namespace ResistanceScores.Services
                     }).ToList(),
                     Id = g.Id
                 })
+                .Take(100)
                 .ToListAsync();
 
             var players = games.SelectMany(x => x.Players).Select(x => x.Player).Distinct().ToList();

@@ -20,7 +20,8 @@ export class WinHistoryComponent implements OnInit {
   public errorOccurred = false;
 
   private gameMonths: { identifier: string, firstGameId: number, gameCount: number, label: string }[] = [];
-  private MONTH_NAMES = []
+
+  log = console.log
 
   ngOnInit() {
     this._loadWinHistory();
@@ -105,7 +106,7 @@ export class WinHistoryComponent implements OnInit {
       .pipe(take(1))
       .subscribe(
         games => {
-          this.games = games;
+          this.games = games.sort((a, b) => a.id - b.id);
           this._populateGameMonths();
           this.areGamesLoading = false;
         },
