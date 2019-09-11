@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResistanceScores", "ResistanceScores\ResistanceScores.csproj", "{5CF640B4-5888-43D2-A983-6C32A9681427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResistanceScores", "ResistanceScores\ResistanceScores.csproj", "{5CF640B4-5888-43D2-A983-6C32A9681427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResistanceScores.UnitTests", "ResistanceScores.UnitTests\ResistanceScores.UnitTests.csproj", "{EC20E005-62BB-4617-8975-675199EE5B0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5CF640B4-5888-43D2-A983-6C32A9681427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CF640B4-5888-43D2-A983-6C32A9681427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CF640B4-5888-43D2-A983-6C32A9681427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC20E005-62BB-4617-8975-675199EE5B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC20E005-62BB-4617-8975-675199EE5B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC20E005-62BB-4617-8975-675199EE5B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC20E005-62BB-4617-8975-675199EE5B0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
