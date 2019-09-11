@@ -22,6 +22,7 @@ namespace ResistanceScores.Services
         {
             var query = _appDbContext
                 .Players
+                .Where(p => !p.IsArchived)
                 .Include(x => x.Games)
                 .ThenInclude(x => x.Game);
 
@@ -170,11 +171,12 @@ namespace ResistanceScores.Services
             };
         }
 
-        public async Task<List<StreakDto>> GetStreaks()
+        public async Task<List<StreakDto>> GetStreaks() // TODO - TH - Refactor this so it gets players and includes the other info
         {
             var gamePlayers = _appDbContext.GamePlayers
                             .Include(gp => gp.Game)
-                            .Include(gp => gp.Player);
+                            .Include(gp => gp.Player)
+                            .Where(gp => !gp.Player.IsArchived);
 
             var playerDateWinList = await gamePlayers
                 .Select(o => new

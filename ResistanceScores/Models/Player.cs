@@ -23,6 +23,9 @@ namespace ResistanceScores.Models
         [StringLength(2)]
         public string Initials { get; set; }
 
+        [Required]
+        public bool IsArchived { get; set; }
+
         public List<GamePlayer> Games { get; set; }
     }
 }

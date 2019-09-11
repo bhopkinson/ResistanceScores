@@ -26,7 +26,8 @@ export class PlayerEditComponent implements OnInit {
     this.form = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.maxLength(50)]],
       surname: ['', [Validators.required, Validators.maxLength(50)]],
-      initials: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]]
+      initials: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      isArchived: [false]
     });
 
     if (!this.isNew) {
@@ -38,6 +39,7 @@ export class PlayerEditComponent implements OnInit {
             firstName: player.firstName,
             surname: player.surname,
             initials: player.initials,
+            isArchived: player.isArchived
           });
           this.isLoading = false;
         },
@@ -53,6 +55,7 @@ export class PlayerEditComponent implements OnInit {
         firstName: this.form.get('firstName').value,
         surname: this.form.get('surname').value,
         initials: this.form.get('initials').value,
+        isArchived: this.form.get('isArchived').value
       })
 
       if (this.isNew) {

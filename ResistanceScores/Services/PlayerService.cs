@@ -23,7 +23,8 @@ namespace ResistanceScores.Services
             {
                 FirstName = player.FirstName,
                 Surname = player.Surname,
-                Initials = player.Initials
+                Initials = player.Initials,
+                IsArchived = player.IsArchived
             };
 
             _appDbContext.Players.Add(newPlayer);
@@ -49,6 +50,7 @@ namespace ResistanceScores.Services
                 FirstName = o.FirstName,
                 Surname = o.Surname,
                 Initials = o.Initials,
+                IsArchived = o.IsArchived,
             })
             .SingleOrDefaultAsync(o => o.Id == id);
         }
@@ -63,6 +65,7 @@ namespace ResistanceScores.Services
                     FirstName = o.FirstName,
                     Surname = o.Surname,
                     Initials = o.Initials,
+                    IsArchived = o.IsArchived,
                 })
                 .ToListAsync();
         }
@@ -74,6 +77,7 @@ namespace ResistanceScores.Services
             dbPlayer.FirstName = player.FirstName;
             dbPlayer.Surname = player.Surname;
             dbPlayer.Initials = player.Initials;
+            dbPlayer.IsArchived = player.IsArchived;
 
             _appDbContext.Players.Update(dbPlayer);
 

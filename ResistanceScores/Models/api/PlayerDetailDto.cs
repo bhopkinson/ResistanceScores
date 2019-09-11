@@ -22,5 +22,8 @@ namespace ResistanceScores.Models.api
         [Required]
         [StringLength(2)]
         public string Initials { get; set; }
+
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }

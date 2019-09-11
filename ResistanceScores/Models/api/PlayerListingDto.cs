@@ -15,5 +15,7 @@ namespace ResistanceScores.Models.api
         public string Surname { get; set; }
 
         public string Initials { get; set; }
+
+        public bool IsArchived { get; set; }
     }
 }

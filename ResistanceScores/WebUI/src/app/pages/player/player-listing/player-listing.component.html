@@ -14,9 +14,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let player of players">
-          <td>{{player.initials}}</td>
-          <td>{{player.firstName}} {{player.surname}}</td>
+        <tr *ngFor="let player of players" [class.is-archived]="player.isArchived">
+          <td><span>{{player.initials}}</span></td>
+          <td><span>{{player.firstName}} {{player.surname}}</span></td>
           <td><a [routerLink]="['/players/edit/' + player.id]">Edit</a></td>
           <td><a [routerLink]="['/players/detail/' + player.id]">Details</a></td>
         </tr>

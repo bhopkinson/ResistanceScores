@@ -26,6 +26,11 @@
 
     <br />
 
+    <label for="initials">Archived?</label>
+    <input type="checkbox" id="isArchived" formControlName="isArchived">
+
+    <br />
+
     <button>Submit</button>
   </form>
   <button *ngIf="!isNew" (click)="delete()">Delete</button>

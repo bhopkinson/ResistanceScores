@@ -19,7 +19,7 @@ namespace ResistanceScores.Services
 
         public async Task<List<PairingSummaryDto>> GetSummary()
         {
-            var players = await _appDbContext.Players.ToListAsync();
+            var players = await _appDbContext.Players.Where(p => !p.IsArchived).ToListAsync();
             var playerIds = players.Select(p => p.Id);
 
             var games = await _appDbContext.Games
