@@ -1,0 +1,31 @@
+<h1>Pairings</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Ids</th>
+      <th>Wins</th>
+      <th>Losses</th>
+      <th>Total games</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="!isLoading && !errorOccurred">
+    <tr *ngFor="let pairing of visiblePairings">
+      <td>{{getMultipleInitials(pairing.ids)}}</td>
+      <td>{{pairing.wins}}</td>
+      <td>{{getLossCount(pairing)}}</td>
+      <td>{{pairing.totalGames}}</td>
+      <td>{{getWinPercentage(pairing) | number: '2.2-2' }}</td>
+    </tr>
+  </tbody>
+</table>
+<button class="toggle-show-more-button" (click)="toggleShowAll()">{{toggleShowAllLabel}}</button>
+
+<div class="no-content-message" *ngIf="isLoading && !errorOccurred">
+  Loading...
+</div>
+<div class="no-content-message error-message" *ngIf="errorOccurred" (click)="reloadData()">
+  An error has occurred.
+  <br />
+  Click here to reload.
+</div>

@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient, GraphClient } from './services/web-api.service.generated';
+import { PlayerClient, LeaderboardClient, API_BASE_URL, GameClient, GraphClient, PairingClient } from './services/web-api.service.generated';
 import { PlayerEditComponent } from './pages/player/player-edit/player-edit.component';
 import { PlayerDetailComponent } from './pages/player/player-detail/player-detail.component';
 import { PlayerListingComponent } from './pages/player/player-listing/player-listing.component';
@@ -38,6 +38,7 @@ import { GraphYLabelComponent } from './graph/graph-y-label.component';
 import { GameOverviewComponent } from './shared/game-overview/game-overview.component';
 import { HomeComponent } from './pages/home/home.component';
 import { StreakTableComponent } from './shared/streak-table/streak-table.component';
+import { PairingsComponent } from './shared/pairings/pairings.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -74,7 +75,8 @@ export function getBaseUrl() {
     GraphYLabelComponent,
     GameOverviewComponent,
     HomeComponent,
-    StreakTableComponent
+    StreakTableComponent,
+    PairingsComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,7 @@ export function getBaseUrl() {
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ChartsModule
   ],
-  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient, GraphClient],
+  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient, GraphClient, PairingClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

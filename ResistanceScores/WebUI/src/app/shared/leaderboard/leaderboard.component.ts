@@ -23,8 +23,6 @@ export class LeaderboardComponent implements OnInit {
   public Timescale = Timescale;
 
   ngOnInit() {
-    console.log(13858);
-
     this._leaderboardClient
       .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
       .pipe(take(1))
