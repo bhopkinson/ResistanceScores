@@ -15,9 +15,7 @@ function copyClassesAndStyles(element) {
             .forEach(function (_) {
             element.classes = element.elRef.nativeElement.getAttribute(classStr);
             var stylesAsString = element.elRef.nativeElement.getAttribute(styleStr);
-            console.log("{" + stylesAsString + "}");
             element.styles = JSON.parse("{" + stylesAsString + "}");
-            console.log(element.styles);
         });
     });
     var config = {

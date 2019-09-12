@@ -56,8 +56,6 @@ export class GameEditComponent implements OnInit {
       this._gameClient.getGame(this.gameId)
         .pipe(take(1))
         .subscribe(g => {
-          console.log(this.date);
-          console.log(g.date);
           this.date = g.date;
           this.selectedPlayerIds = g.players
             .map(p => p.id);
@@ -135,7 +133,6 @@ export class GameEditComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.date)
     if (this.isValid) {
       const gamePlayers = this.selectedPlayers.map(p => new GamePlayerUpdateDto({
         id: p.id,

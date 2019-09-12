@@ -29,9 +29,6 @@ export class LeaderboardComponent implements OnInit {
       .subscribe(
         leaderboard => { this.leaderboard = leaderboard.sort(this.sortByPercentageFn); 
           this.isLoading = false; 
-          console.log(leaderboard);
-          console.log(654684);
-          leaderboard.forEach(console.log) },
         error => { this.errorOccurred = true; }
       )
   }

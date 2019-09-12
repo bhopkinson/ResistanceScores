@@ -14,6 +14,6 @@ export class HomeComponent implements OnInit {
 
   clickCount = 0;
 
-  incrementClickCount = () => { this.clickCount++; console.log(this.clickCount) }
+  incrementClickCount = () => { this.clickCount++; }
 
 }

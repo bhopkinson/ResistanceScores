@@ -17,9 +17,7 @@ export function copyClassesAndStyles<T extends { elRef: ElementRef, classes: str
       .forEach(_ => {
         element.classes = (element.elRef.nativeElement as HTMLElement).getAttribute(classStr);
         const stylesAsString = (element.elRef.nativeElement as HTMLElement).getAttribute(styleStr);
-        console.log(`{${stylesAsString}}`);
         element.styles = JSON.parse(`{${stylesAsString}}`);
-        console.log(element.styles);
       });
   });
   const config = {

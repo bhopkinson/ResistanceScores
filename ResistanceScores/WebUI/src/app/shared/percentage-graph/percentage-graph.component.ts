@@ -166,8 +166,6 @@ export class PercentageGraphComponent implements OnInit {
       const player = players[0];
       return player.initials
     }
-    console.log(id);
-    console.log(this.playerDetails);
     return this.UNKNOWN_PLAYER_INITIALS_STRING;
   }
 
