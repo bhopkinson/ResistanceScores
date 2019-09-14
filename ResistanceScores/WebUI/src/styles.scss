@@ -1,19 +1,69 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --subtle-purple: #f0f0fe;
-  --subtle-purple-light: #f8f8fe;
+  /*Colors*/
+  --primary-rgb: 102, 102, 255;
+  --primary-xxlight: #F8F8FE;
+  --primary-xlight: #F0F0Fe;
+  --primary-light: #EAEAFA;
+  --primary-dark: #33333F;
+  --primary-xdark: #33333C;
+  --primary-xxdark: #333335;
+  --subtle-primary: rgba(var(--primary-rgb), .08);
+  --subtle-primary-1: rgba(var(--primary-rgb), .2);
+  --subtle-primary-2: rgba(var(--primary-rgb), .3);
   --grey-xxlight: #F0F0F0;
+  --grey-xlight: #EFEFEF;
   --grey-light: #EEEEEE;
   --grey: #CCCCCC;
   --grey-dark: #999999;
   --grey-xdark: #666666;
   --grey-xxdark: #333333;
-
+  --success-color: #009900;
+  --success-color-dark: #00CC00;
+  --danger-color: #FF0000;
+  --danger-color-dark: #DD0000;
+  --white: #FFFFFF;
+  --black: #000000;
+  --black-50: rgba(0,0,0,0.5);
+  --light-theme-toggle-color: #3396ff;
+  --dark-theme-toggle-color: --black;
+  /*Sizes*/
+  --nav-height: 50px;
+  /*Etc.*/
   user-select: none;
+  /*Light theme*/
+  --background-color: var(--white);
+  --background-color-1: var(--grey-xxlight);
+  --background-color-2: var(--grey-xlight);
+  --background-color-3: var(--grey-light);
+  --foreground-color: var(--black);
+  --foreground-color-1: var(--grey-xxdark);
+  --foreground-color-2: var(--grey-xdark);
+  --foreground-color-3: var(--grey-dark);
+  --foreground-color-4: var(--grey);
+  --win-color: var(--success-color);
+  --loss-color: var(--danger-color);
+  --shadow-color: var(--black-50);
+}
+
+.dark-theme {
+  --background-color: var(--grey-xxdark);
+  --background-color-1: var(--grey-xdark);
+  --background-color-2: var(--grey-dark);
+  --background-color-3: var(--grey);
+  --foreground-color: var(--white);
+  --foreground-color-1: var(--grey-xxlight);
+  --foreground-color-2: var(--grey-xlight);
+  --foreground-color-3: var(--grey-light);
+  --foreground-color-4: var(--grey);
+  --win-color: var(--success-color-dark);
+  --loss-color: var(--danger-color-dark);
+  --shadow-color: var(--black-50);
 }
 
 body {
-  background-color: #ffffff;
+  background-color: var(--background-color) !important;
+  color: var(--foreground-color) !important;
 }
 
 .component-multi {
@@ -27,8 +77,8 @@ body {
   margin-bottom: 20px;
   padding: 0 0 25px;
   text-align: center;
-  box-shadow: 5px 5px 15px var(--grey);
-  color: var(--grey-xxdark);
+  box-shadow: 5px 5px 15px var(--shadow-color);
+  color: var(--foreground-color-1);
   min-width: 300px;
   flex-grow: 1;
 }
@@ -41,32 +91,28 @@ body {
   flex-grow: 5;
 }
 
+.action-button {
+  all: unset;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid var(--grey-dark);
+  border-radius: 5px;
+  background-color: var(--subtle-primary-1);
+  color: var(--foreground-color);
+
+  &:hover {
+    background-color: var(--subtle-primary-2);
+  }
+}
+
 table {
   width: 100%;
 }
 
 td, th {
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid var(--foreground-color-4);
   text-align: center !important;
-}
-
-.button-bar {
-  display: flex;
-  flex-wrap: wrap;
-  border-bottom: 1px dashed lightgrey;
-
-  &:first-of-type {
-    border-top: 1px dashed lightgrey;
-  }
-
-  &:last-of-type {
-    border-bottom: 1px solid grey;
-  }
-
-  .button-bar_button {
-    flex-grow: 1;
-    width: 25%;
-  }
 }
 
 app-button-select {
@@ -75,25 +121,50 @@ app-button-select {
 }
 
 app-button-select-option {
-  border: 1px solid var(--grey);
-  color: #cccccc;
+  border: 1px solid var(--foreground-color-4);
+  color: var(--foreground-color-3);
   flex-grow: 1;
   text-align: center;
   min-height: 2rem;
   border-radius: 5px;
   padding: 0.5rem;
+  background-color: var(--subtle-primary);
+
+  &:first-of-type {
+    border-radius: 0 5px 5px 0;
+  }
+
+  &:last-of-type {
+    border-radius: 5px 0 0 5px;
+  }
 
   &.selected {
-    border-color: var(--grey-dark);
-    color: var(--grey-xdark);
-    background-color: var(--subtle-purple-light);
+    border-color: var(--foreground-color-3);
+    color: var(--foreground-color-2);
+    background-color: var(--subtle-primary-1);
   }
 
   &:hover {
     cursor: pointer;
-    background-color: var(--subtle-purple);
+    background-color: var(--subtle-primary-2);
+    color: var(--foreground-color-1);
   }
 }
+
+.router-container {
+  min-height: calc(100vh - var(--nav-height));
+}
+
+.bottom-nav {
+  height: var(--nav-height);
+  background-color: var(--grey-xxdark);
+  padding: 5px;
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  border-top: solid 1px var(--grey-dark);
+}
+
 
 @media (min-width: 576px) {
   .component-multi{
@@ -104,27 +175,19 @@ app-button-select-option {
   .component {
     display: inline-block;
     margin-right: 20px;
-    border: 1px solid var(--grey-xxlight);
+    border: 1px solid var(--background-color-1);
     border-radius: 15px;
     padding: 0 0 25px;
     text-align: center;
-    box-shadow: 5px 5px 15px var(--grey);
-    color: var(--grey-xxdark);
     min-width: 300px;
   }
 }
 
-/*app-button-select-option.selected {
-  border-color: #333333;
-  color: #333333;
-  background-color: #f0f0fe;*/
+.no-content-message {
+  padding: 2.5rem 0;
+  color: var(--foreground-color-2);
+}
 
-/*pp-button-select-option {
-  border: 1px solid #cccccc;
-  color: #cccccc;
-  background-color: #ff3ff;
-  flex-grow: 1;
-  text-align: center;
-  min-height: 2rem;
-  border-radius: 5px;
-  padding: 0.5rem;*/
+.error-message {
+  font-style: italic;
+}

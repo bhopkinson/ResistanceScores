@@ -39,6 +39,7 @@ import { GameOverviewComponent } from './shared/game-overview/game-overview.comp
 import { HomeComponent } from './pages/home/home.component';
 import { StreakTableComponent } from './shared/streak-table/streak-table.component';
 import { PairingsComponent } from './shared/pairings/pairings.component';
+import { CssThemeComponent } from './nav/css-theme.component';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -76,7 +77,8 @@ export function getBaseUrl() {
     GameOverviewComponent,
     HomeComponent,
     StreakTableComponent,
-    PairingsComponent
+    PairingsComponent,
+    CssThemeComponent
   ],
   imports: [
     BrowserModule,
@@ -87,7 +89,14 @@ export function getBaseUrl() {
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ChartsModule
   ],
-  providers: [{ provide: API_BASE_URL, useFactory: getBaseUrl }, PlayerClient, LeaderboardClient, GameClient, GraphClient, PairingClient],
+  providers: [
+    { provide: API_BASE_URL, useFactory: getBaseUrl },
+    PlayerClient,
+    LeaderboardClient,
+    GameClient,
+    GraphClient,
+    PairingClient
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

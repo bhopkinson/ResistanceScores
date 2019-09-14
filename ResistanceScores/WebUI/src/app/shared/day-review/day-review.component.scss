@@ -5,11 +5,11 @@
   border-radius: 1rem;
 
   &.game-player-dot--win {
-    background-color: green;
+    background-color: var(--win-color);
   }
 
   &.game-player-dot--loss {
-    background-color: red;
+    background-color: var(--loss-color);
   }
 }
 
@@ -29,13 +29,13 @@ td, th {
     height: 2rem;
     width: 2rem;
     margin: auto 8px auto;
-    border: 1px solid var(--grey);
-    background-color: #FFFFFF;
+    border: 1px solid var(--foreground-color-4);
+    background-color: var(--background-color);
     border-radius: 5px;
-    color: var(--grey);
+    color: var(--foreground-color-4);
 
     &:hover {
-      background-color: var(--grey-light);
+      background-color: var(--background-color-1);
     }
 
     &:focus {
@@ -43,22 +43,13 @@ td, th {
     }
 
     &[disabled] {
-      background-color: #FFFFFF;
-      border-color: var(--grey-xxlight);
-      color: var(--grey-xxlight);
+      background-color: var(--background-color);
+      border-color: var(--background-color-1);
+      color: var(--background-color-1);
     }
   }
 
   h1 {
     flex-grow: 1;
   }
-}
-
-.no-content-message {
-  padding: 2.5rem 0;
-  color: var(--grey-xdark);
-}
-
-.error-message {
-  font-style: italic;
 }

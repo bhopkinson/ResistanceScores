@@ -17,7 +17,7 @@
     </tr>
   </tbody>
 </table>
-<button class="reload-button" *ngIf="!isLoading && !errorOccurred" (click)="reloadData()">Reload</button>
+<button class="action-button" *ngIf="!isLoading && !errorOccurred" (click)="reloadData()">Reload</button>
 <div class="no-content-message" *ngIf="isLoading && !errorOccurred">
   Loading...
 </div>
