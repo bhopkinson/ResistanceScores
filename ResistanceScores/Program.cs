@@ -23,7 +23,7 @@ namespace ResistanceScores
                 {
                     if (hostingContext.HostingEnvironment.IsProduction())
                     {
-                        config.AddJsonFile("appsettings.Secrets.json", optional: false, reloadOnChange: true);
+                        config.AddJsonFile("appsettings.secret.json", optional: false, reloadOnChange: true);
                     }
                 })
                 .UseStartup<Startup>();
