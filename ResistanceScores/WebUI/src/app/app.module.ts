@@ -42,7 +42,9 @@ import { PairingsComponent } from './shared/pairings/pairings.component';
 import { CssThemeComponent } from './nav/css-theme.component';
 
 export function getBaseUrl() {
-  return document.getElementsByTagName('base')[0].href;
+    return environment.production
+      ? document.getElementsByTagName('base')[0].href
+      : 'https://localhost:5001';
 }
 
 @NgModule({
