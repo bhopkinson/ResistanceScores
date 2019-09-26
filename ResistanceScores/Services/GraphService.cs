@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using ResistanceScores.Helpers;
 using ResistanceScores.Models;
 using ResistanceScores.Models.api;
 
@@ -17,11 +19,13 @@ namespace ResistanceScores.Services
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task<List<GraphPlayerDto>> GetGraph()
+        public async Task<List<GraphPlayerDto>> GetGraph(QueryOptions queryOptions)
         {
-            var gamePlayers = _appDbContext.GamePlayers
+            var gamePlayers = (IQueryable<GamePlayer>)_appDbContext.GamePlayers
                 .Include(gp => gp.Game)
                 .Include(gp => gp.Player);
+
+            gamePlayers = FilterGamePlayers(gamePlayers, queryOptions);
 
             var playerDateWinList = await gamePlayers
                 .Select(o => new
@@ -80,11 +84,17 @@ namespace ResistanceScores.Services
                 .ToList();
         }
 
-        //private Hello GroupByDate(List<GamePlayerWinDto> gamePlayerWins) {
-        //    return gamePlayerWins.Select(gpw => new Hello {
-                
-        //    })
-        //}
+        private IQueryable<GamePlayer> FilterGamePlayers(IQueryable<GamePlayer> query, QueryOptions queryOptions)
+        {
+            var teamClause = QueryHelper.GetTeamWhereClause(queryOptions.Team);
+            var timescaleClause = QueryHelper.GetTimescaleWhereClause(queryOptions.Timescale);
+            var gameSizeClause = QueryHelper.GetGameSizeWhereClause(queryOptions.NoOfPlayers);
+
+            return query
+                .Where(teamClause)
+                .Where(timescaleClause)
+                .Where(gameSizeClause);
+        }
 
         private class Hello
         {

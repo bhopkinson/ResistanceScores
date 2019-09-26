@@ -64,6 +64,24 @@
                         [hue]="getHue(player.playerId)"></app-graph-dataline>
     <!--TODO - TH - Move [hue] out of here, make it generic-->
   </app-graph>
+
+  <app-button-select [(ngModel)]="teamFilter">
+    <app-button-select-option [value]="Team.None">All games</app-button-select-option>
+    <app-button-select-option [value]="Team.Resistance">Just resistance</app-button-select-option>
+    <app-button-select-option [value]="Team.Spy">Just spies</app-button-select-option>
+  </app-button-select>
+  
+  <app-button-select [(ngModel)]="timescaleFilter">
+    <app-button-select-option [value]="Timescale.AllTime">All time</app-button-select-option>
+    <app-button-select-option [value]="Timescale.Last7Days">This week</app-button-select-option>
+    <app-button-select-option [value]="Timescale.Last30Days">This month</app-button-select-option>
+  </app-button-select>
+  
+  <app-button-select [(ngModel)]="noOfPlayersFilter">
+    <app-button-select-option [value]="4">All sizes</app-button-select-option>
+    <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P</app-button-select-option>
+  </app-button-select>
+
   <div>
     <span>Dates:</span>
     <label for="dayssince">From</label>

@@ -23,9 +23,9 @@ namespace ResistanceScores.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<GraphPlayerDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GraphPlayerDto>>> Get()
+        public async Task<ActionResult<List<GraphPlayerDto>>> Get([FromQuery] QueryOptions queryOptions)
         {
-            var graph = await _graphService.GetGraph();
+            var graph = await _graphService.GetGraph(queryOptions);
             return Ok(graph);
         }
     }

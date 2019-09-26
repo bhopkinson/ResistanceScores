@@ -22,7 +22,7 @@ export class GameClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:54380";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getGames(): Observable<GameListingDto[]> {
@@ -343,11 +343,27 @@ export class GraphClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:54380";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    get(): Observable<GraphPlayerDto[]> {
-        let url_ = this.baseUrl + "/api/Graph";
+    get(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined, asOfWhen: number | undefined): Observable<GraphPlayerDto[]> {
+        let url_ = this.baseUrl + "/api/Graph?";
+        if (team === null)
+            throw new Error("The parameter 'team' cannot be null.");
+        else if (team !== undefined)
+            url_ += "Team=" + encodeURIComponent("" + team) + "&"; 
+        if (timescale === null)
+            throw new Error("The parameter 'timescale' cannot be null.");
+        else if (timescale !== undefined)
+            url_ += "Timescale=" + encodeURIComponent("" + timescale) + "&"; 
+        if (noOfPlayers === null)
+            throw new Error("The parameter 'noOfPlayers' cannot be null.");
+        else if (noOfPlayers !== undefined)
+            url_ += "NoOfPlayers=" + encodeURIComponent("" + noOfPlayers) + "&"; 
+        if (asOfWhen === null)
+            throw new Error("The parameter 'asOfWhen' cannot be null.");
+        else if (asOfWhen !== undefined)
+            url_ += "AsOfWhen=" + encodeURIComponent("" + asOfWhen) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -407,7 +423,7 @@ export class LeaderboardClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:54380";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getLeaderboard(team: Team | undefined, timescale: Timescale | undefined, noOfPlayers: number | undefined, asOfWhen: number | undefined): Observable<LeaderboardDto[]> {
@@ -654,7 +670,7 @@ export class PairingClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:54380";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getSummary(): Observable<PairingSummaryDto[]> {
@@ -718,7 +734,7 @@ export class PlayerClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "http://localhost:54380";
+        this.baseUrl = baseUrl ? baseUrl : "";
     }
 
     getPlayers(): Observable<PlayerListingDto[]> {
@@ -1391,6 +1407,18 @@ export interface IGraphPointDto {
     date: Date;
 }
 
+export enum Team {
+    None = 0,
+    Resistance = 1,
+    Spy = 2,
+}
+
+export enum Timescale {
+    AllTime = 0,
+    Last7Days = 1,
+    Last30Days = 2,
+}
+
 export class LeaderboardDto implements ILeaderboardDto {
     playerId!: number;
     initials?: string | undefined;
@@ -1437,18 +1465,6 @@ export interface ILeaderboardDto {
     initials?: string | undefined;
     wins: number;
     totalGames: number;
-}
-
-export enum Team {
-    None = 0,
-    Resistance = 1,
-    Spy = 2,
-}
-
-export enum Timescale {
-    AllTime = 0,
-    Last7Days = 1,
-    Last30Days = 2,
 }
 
 export class GameOverviewDto implements IGameOverviewDto {
