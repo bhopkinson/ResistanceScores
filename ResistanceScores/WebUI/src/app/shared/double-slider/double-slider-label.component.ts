@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-double-slider-label',
-  templateUrl: './double-slider-label.component.html',
-  styleUrls: ['./double-slider-label.component.scss']
+  template: ''
 })
-export class DoubleSliderLabelComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class DoubleSliderLabelComponent {
+  @Input() value = 0;
+  @Input() text = '';
 }

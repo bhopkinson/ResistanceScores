@@ -107,7 +107,12 @@ export class LeaderboardComponent implements OnInit {
     this._loadData();
   }
 
-  private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => { return this.getWinPercentage(b) - this.getWinPercentage(a); }
+  private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => {
+    const result = this.getWinPercentage(b) - this.getWinPercentage(a);
+    return result !== 0
+      ? result
+      : b.totalGames - a.totalGames; // TODO [TH] rename the sort function and centralise it and refactor it
+  }
 
   private _loadData(): void {
     this._leaderboardClient

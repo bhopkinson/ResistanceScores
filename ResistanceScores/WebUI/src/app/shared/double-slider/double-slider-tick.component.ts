@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-double-slider-tick',
-  templateUrl: './double-slider-tick.component.html',
-  styleUrls: ['./double-slider-tick.component.scss']
+  template: ''
 })
-export class DoubleSliderTickComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class DoubleSliderTickComponent { 
+  @Input() value = 0;
 }

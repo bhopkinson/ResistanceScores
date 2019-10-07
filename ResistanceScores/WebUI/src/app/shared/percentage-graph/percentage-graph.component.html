@@ -13,55 +13,31 @@
     <p>Legend</p>
     <div class="legend-items">
       <div class="legend-item" *ngFor="let player of players" (click)="togglePlayerVisibility(player.playerId)"
-           [class.hidden]="isHidden(player.playerId)">
+        [class.hidden]="isHidden(player.playerId)">
         <span class="legend-dot" [style.background-color]="getColour(player.playerId)"></span>
         <span>{{getInitials(player.playerId)}}</span>
       </div>
     </div>
   </div>
 
-  <app-graph [xMin]="xMin"
-             [xMax]="xMax"
-             [yMin]="yMin"
-             [yMax]="yMax"
-             [xScale]="xScale"
-             [yScale]="yScale"
-             [xTickScale]="xTickScale"
-             [yTickScale]="yTickScale"
-             [xLabelScale]="xLabelScale"
-             [yLabelScale]="yLabelScale"
-             class="graph">
-    <app-graph-x-gridline *ngFor="let line of xGridlines"
-                          class="gridline special"
-                          [x]="line"></app-graph-x-gridline>
+  <app-graph [xMin]="xMin" [xMax]="xMax" [yMin]="yMin" [yMax]="yMax" [xScale]="xScale" [yScale]="yScale"
+    [xTickScale]="xTickScale" [yTickScale]="yTickScale" [xLabelScale]="xLabelScale" [yLabelScale]="yLabelScale"
+    class="graph">
+    <app-graph-x-gridline *ngFor="let line of xGridlines" class="gridline special" [x]="line"></app-graph-x-gridline>
 
-    <app-graph-y-gridline *ngFor="let line of yGridlines"
-                          class="gridline"
-                          [y]="line"></app-graph-y-gridline>
+    <app-graph-y-gridline *ngFor="let line of yGridlines" class="gridline" [y]="line"></app-graph-y-gridline>
 
-    <app-graph-x-tick *ngFor="let line of xGridlines"
-                      class="gridline special"
-                      [x]="line"></app-graph-x-tick>
+    <app-graph-x-tick *ngFor="let line of xGridlines" class="gridline special" [x]="line"></app-graph-x-tick>
 
-    <app-graph-y-tick *ngFor="let line of yGridlines"
-                      class="gridline"
-                      [y]="line"></app-graph-y-tick>
+    <app-graph-y-tick *ngFor="let line of yGridlines" class="gridline" [y]="line"></app-graph-y-tick>
 
-    <app-graph-x-label *ngFor="let line of xGridlines"
-                       class="x-text"
-                       [x]="line"
-                       text="{{getXLabel(line) | date:'dd/MM'}}"></app-graph-x-label>
+    <app-graph-x-label *ngFor="let line of xGridlines" class="x-text" [x]="line"
+      text="{{getXLabel(line) | date:'dd/MM'}}"></app-graph-x-label>
 
-    <app-graph-y-label *ngFor="let line of yGridlines"
-                       class="y-text"
-                       [y]="line"
-                       [text]="line"></app-graph-y-label>
+    <app-graph-y-label *ngFor="let line of yGridlines" class="y-text" [y]="line" [text]="line"></app-graph-y-label>
 
-    <app-graph-dataline *ngFor="let player of visiblePlayers"
-                        [xData]="getRelativeDays(player)"
-                        [yData]="getWinPercentages(player)"
-                        class="data-1"
-                        [hue]="getHue(player.playerId)"></app-graph-dataline>
+    <app-graph-dataline *ngFor="let player of visiblePlayers" [xData]="getRelativeDays(player)"
+      [yData]="getWinPercentages(player)" class="data-1" [hue]="getHue(player.playerId)"></app-graph-dataline>
     <!--TODO - TH - Move [hue] out of here, make it generic-->
   </app-graph>
 
@@ -70,30 +46,47 @@
     <app-button-select-option [value]="Team.Resistance">Just resistance</app-button-select-option>
     <app-button-select-option [value]="Team.Spy">Just spies</app-button-select-option>
   </app-button-select>
-  
+
   <app-button-select [(ngModel)]="timescaleFilter">
     <app-button-select-option [value]="Timescale.AllTime">All time</app-button-select-option>
     <app-button-select-option [value]="Timescale.Last7Days">This week</app-button-select-option>
     <app-button-select-option [value]="Timescale.Last30Days">This month</app-button-select-option>
   </app-button-select>
-  
+
   <app-button-select [(ngModel)]="noOfPlayersFilter">
     <app-button-select-option [value]="4">All sizes</app-button-select-option>
-    <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P</app-button-select-option>
+    <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P
+    </app-button-select-option>
   </app-button-select>
 
-  <div>
-    <span>Dates:</span>
-    <label for="dayssince">From</label>
-    <input type="date" name="dayssince" [ngModel]="xMinAsDate | date: 'yyyy-MM-dd'" (ngModelChange)="xMinAsDate = $event" />
-    <label for="daysto">To</label>
-    <input type="date" name="daysto" [ngModel]="xMaxAsDate | date: 'yyyy-MM-dd'" (ngModelChange)="xMaxAsDate = $event" />
+  <div class="form-group">
+    <div class="form-group__label">
+      Dates:
+    </div>
+    <div class="form-group__content">
+      <div class="form-field">
+        <app-double-slider [min]="dateRangeMin" [max]="today" [(leftValue)]="xMin" [(rightValue)]="xMax">
+          <ng-container *ngFor="let option of dateRangeOptions">
+            <app-double-slider-label [value]="option.value" [text]="option.text"></app-double-slider-label>
+            <app-double-slider-tick [value]="option.value"></app-double-slider-tick>
+          </ng-container>
+        </app-double-slider>
+      </div>
+    </div>
   </div>
-  <div>
-    <span>Percentage range:</span>
-    <label for="percentagefrom">Between</label>
-    <input type="number" name="dayssince" [(ngModel)]="yMin" />
-    <label for="percentageto">And</label>
-    <input type="number" name="daysto" [(ngModel)]="yMax" />
+  <div class="form-group">
+    <div class="form-group__label">
+      Percentage:
+    </div>
+    <div class="form-group__content">
+      <div class="form-field">
+        <app-double-slider min="0" max="100" [(leftValue)]="yMin" [(rightValue)]="yMax">
+            <ng-container *ngFor="let option of percentageRangeOptions">
+                <app-double-slider-label [value]="option.value" [text]="option.text"></app-double-slider-label>
+                <app-double-slider-tick [value]="option.value"></app-double-slider-tick>
+              </ng-container>
+        </app-double-slider>
+      </div>
+    </div>
   </div>
 </div>

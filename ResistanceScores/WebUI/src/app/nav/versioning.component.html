@@ -1,3 +1,4 @@
-<p>
-  versioning works!
-</p>
+<div [class.new-version-available]="isNewVersionAvailable" (click)="updateServiceWorker()">
+  <span class="new-version-available-badge" *ngIf="isNewVersionAvailable">!</span>
+  <span>v0.11.2</span>
+</div>

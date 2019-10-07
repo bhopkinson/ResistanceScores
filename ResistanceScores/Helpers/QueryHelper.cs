@@ -28,11 +28,13 @@ namespace ResistanceScores.Helpers
         public static Expression<Func<GamePlayer, bool>> GetTimescaleWhereClause(Timescale timescale)
         {
             Expression<Func<GamePlayer, bool>> timescaleClause;
-            var thisMonday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+            var dayOfWeek = (int)DateTime.Today.DayOfWeek;
+            if (dayOfWeek == 0) { dayOfWeek = 7; } // make Sunday = 7 instead of 0
+            var thisMonday = DateTime.Today.AddDays(-dayOfWeek + (int)DayOfWeek.Monday);
             switch (timescale)
             {
-                case Timescale.Last30Days:
-                    timescaleClause = g => DateTime.Now.Month == g.Game.Date.Month && DateTime.Now.Year == g.Game.Date.Year;
+                case Timescale.Last30Days: // TODO [TH] Figure out why this is necessary
+                    timescaleClause = g => DateTime.Now.Month == (g.Game.Date.AddDays(1)).Month && DateTime.Now.Year == g.Game.Date.Year;
                     break;
                 case Timescale.Last7Days:
                     timescaleClause = g => thisMonday <= g.Game.Date;

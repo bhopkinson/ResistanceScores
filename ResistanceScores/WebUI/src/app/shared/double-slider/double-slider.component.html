@@ -1,3 +1,41 @@
-<p>
-  double-slider works!
-</p>
+<div class="double-slider">
+      <span *ngFor="let label of labels" class="double-slider__label" [style.left.%]="getPercentage(label.value)">
+            {{label.text}}
+      </span>
+      <span *ngFor="let tick of ticks" class="double-slider__tick" [style.left.%]="getPercentage(tick.value)"></span>
+      <div class="double-slider__track"></div>
+      <div class="double-slider__thumb" [style.left.%]="getPercentage(leftValue)"></div>
+      <div class="double-slider__thumb" [style.left.%]="getPercentage(rightValue)"></div>
+</div>
+
+<!-- <div class="double-slider">
+    <div class="double-slider__track"></div>
+    <div class="double-slider__thumb" [style.left.%]="getPercentage(leftValue)"></div>
+    <div class="double-slider__thumb" [style.left.%]="getPercentage(rightValue)"></div>
+    <div class="double-slider__runner">
+      <input class="double-slider__runner__input"
+      type="range"
+      [(ngModel)]="leftValue"
+      [min]="min"
+      [max]="rightValue-1"
+      [style.flex]="(rightValue-min)-1">
+      <div class="double-slider__runner__padding" [style.flex]="(max-rightValue)+1"></div>
+    </div>
+    <div class="double-slider__runner">
+      <div class="double-slider__runner__padding" [style.flex]="(leftValue-min)+1"></div>
+      <input class="double-slider__runner__input"
+      type="range"
+      [(ngModel)]="rightValue"
+      [min]="leftValue+1"
+      [max]="max"
+      [style.flex]="(max-leftValue)-1">
+    </div>
+    <span *ngFor="let label of labels"
+          class="double-slider__label"
+          [style.left.%]="getPercentage(label.value)">
+          {{label.text}}
+    </span>
+    <span *ngFor="let tick of ticks"
+        class="double-slider__tick"
+        [style.left.%]="getPercentage(tick.value)"></span>
+  </div> -->

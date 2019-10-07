@@ -31,7 +31,7 @@ namespace ResistanceScores.Services
                 .Select(o => new
                 {
                     Player = o.PlayerId,
-                    o.Game.Date.Date,
+                    Date = o.Game.Date.Date.AddDays(1), // TODO [TH] Find out why this is necessary
                     Win = o.WasResistance == o.Game.ResistanceWin,
                 })
                 .ToListAsync();
@@ -75,6 +75,13 @@ namespace ResistanceScores.Services
                         };
                     }).ToList()
                 };
+
+                graphPlayer.GraphPoints.Add(new GraphPointDto
+                {
+                    Date = DateTime.Today.AddDays(1), // TODO [TH] Find out why this is necessary,
+                    Wins = runningWinCount,
+                    TotalGames = runningGameCount
+                });
 
                 graphPlayers.Add(graphPlayer);
             }

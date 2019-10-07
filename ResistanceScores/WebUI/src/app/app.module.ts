@@ -40,6 +40,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { StreakTableComponent } from './shared/streak-table/streak-table.component';
 import { PairingsComponent } from './shared/pairings/pairings.component';
 import { CssThemeComponent } from './nav/css-theme.component';
+import { DoubleSliderComponent } from './shared/double-slider/double-slider.component';
+import { DoubleSliderLabelComponent } from './shared/double-slider/double-slider-label.component';
+import { DoubleSliderTickComponent } from './shared/double-slider/double-slider-tick.component';
+import { VersioningComponent } from './nav/versioning.component';
 
 export function getBaseUrl() {
     return environment.production
@@ -80,7 +84,11 @@ export function getBaseUrl() {
     HomeComponent,
     StreakTableComponent,
     PairingsComponent,
-    CssThemeComponent
+    CssThemeComponent,
+    DoubleSliderComponent,
+    DoubleSliderLabelComponent,
+    DoubleSliderTickComponent,
+    VersioningComponent
   ],
   imports: [
     BrowserModule,

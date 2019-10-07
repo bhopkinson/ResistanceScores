@@ -1,6 +1,15 @@
+<!-- <div class="hello">
+  <app-double-slider min="0" max="8">
+    <app-double-slider-label *ngFor="let i of [0,1,2,3,4,5,6,7,8]" [value]="i" [text]="'mo'"></app-double-slider-label>
+    <app-double-slider-tick *ngFor="let i of [0,1,2,3,4,5,6,7,8]" [value]="i"></app-double-slider-tick>
+  </app-double-slider>
+</div> -->
+
 <main class="router-container">
   <router-outlet></router-outlet>
 </main>
 <nav class="bottom-nav">
+  <div></div>
   <app-css-theme></app-css-theme>
+  <app-versioning></app-versioning>
 </nav>

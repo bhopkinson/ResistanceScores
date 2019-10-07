@@ -1,0 +1,23 @@
+:host {
+    position: absolute;
+    right: 12px; // TODO [TH] variables
+    margin-top: 6px; // TODO [TH] variables
+    user-select: none;
+    cursor: default;
+    color: var(--grey-xdark);
+}
+
+.new-version-available {
+    cursor: pointer;
+    color: var(--white);
+}
+
+.new-version-available-badge {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: var(--danger-color-dark); // TODO [TH] use variable
+    border-radius: 1rem;
+    display: inline-block;
+    text-align: center;
+    font-weight: bolder;
+}

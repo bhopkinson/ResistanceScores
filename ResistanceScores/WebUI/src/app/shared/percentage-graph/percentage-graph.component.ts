@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphClient, GraphPointDto, GraphPlayerDto, PlayerClient, Team, Timescale } from '../../services/web-api.service.generated';
-import { take } from 'rxjs/operators';
+import { take, first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { DateService } from 'src/app/services/date.service';
 import { PlayerListingDto } from 'src/app/web-api.service.generated';
@@ -43,14 +43,14 @@ export class PercentageGraphComponent implements OnInit {
     this._graphClient.get(Team.None, Timescale.AllTime, 4, 0)
       .pipe(take(1))
       .subscribe(
-          data => {
-            this.players = data;
-            this.arePlayersLoading = false;
-          },
-          error => {
-            this.errorOccurred = true;
-          }
-    )
+        data => {
+          this.players = data;
+          this.arePlayersLoading = false;
+        },
+        error => {
+          this.errorOccurred = true;
+        }
+      )
     this._playerClient.getPlayers()
       .pipe(take(1))
       .subscribe(
@@ -217,10 +217,7 @@ export class PercentageGraphComponent implements OnInit {
     // TODO [TH] - Move this stuff and make generic today methods in the date service
     switch (timescale) {
       case Timescale.Last7Days:
-        const firstOfWeek = new Date();
-        const dayOfWeek = today.getDay();
-        firstOfWeek.setDate(today.getDate() + 1 - dayOfWeek);
-        this.xMinAsDate = firstOfWeek;
+        this.xMin = this.firstOfWeek;
         this.xMaxAsDate = today;
         break;
       case Timescale.Last30Days:
@@ -230,8 +227,7 @@ export class PercentageGraphComponent implements OnInit {
         this.xMaxAsDate = today;
         break;
       default:
-        const firstdayEver = new Date(2019,3,3); // make this a const somewhere
-        this.xMinAsDate = firstdayEver;
+        this.xMinAsDate = this._dateService.firstOfAllTime;
         this.xMaxAsDate = today;
         break;
     }
@@ -260,11 +256,119 @@ export class PercentageGraphComponent implements OnInit {
     this._loadData();
   }
 
+  get dateRangeMin(): number {
+    let min = 0;
+    switch (this._timescaleFilter) { // TODO [TH] - make this clean
+      case Timescale.AllTime:
+        min = this.firstOfAllTime;
+        break;
+      case Timescale.Last30Days:
+        min = this.firstOfMonth;
+        break;
+      case Timescale.Last7Days:
+        min = this.firstOfWeek;
+        break;
+      default:
+        break;
+    }
+    return min;
+  }
+
+  get dateRangeOptions(): { value: any, text: string }[] {
+    let options: { value: any, text: string }[] = [];
+    switch (this._timescaleFilter) { // TODO [TH] - make this clean
+      case Timescale.AllTime:
+        options = this.allTimeDateRangeOptions;
+        break;
+      case Timescale.Last30Days:
+        options = this.thisMonthDateRangeOptions;
+        break;
+      case Timescale.Last7Days:
+        options = this.thisWeekDateRangeOptions;
+        break;
+      default:
+        break;
+    }
+    return options;
+  }
+
+  private get allTimeDateRangeOptions(): { value: any, text: string }[] {
+    const thisMonth = this._dateService.getRelativeMonth(this._dateService.today);
+    const firstMonth = this._dateService.getRelativeMonth(this._dateService.firstOfAllTime);
+    const totalNumberOfMonths = (thisMonth - firstMonth) + 1;
+    const monthsToSkipAtATime = Math.ceil(totalNumberOfMonths / 9);
+    const options: { value: any, text: string }[] = [];
+    let monthLabel = this._dateService.getMMMStringFromRelativeMonth(firstMonth);
+    options.push({value: this.dateRangeMin, text: monthLabel });
+    for (let month = firstMonth + 1; month <= thisMonth; month = month + monthsToSkipAtATime) {
+      const firstOfMonth = this._dateService.getDateFromRelativeMonth(month);
+      const firstOfMonthAsRelativeDay = this._dateService.getRelativeDay(firstOfMonth);
+      monthLabel = this._dateService.getMMMStringFromRelativeMonth(month);
+      options.push({value: firstOfMonthAsRelativeDay, text: monthLabel});
+    }
+    return options;
+  }
+
+  private get thisMonthDateRangeOptions(): { value: any, text: string }[] {
+    const today = this.today;
+    const firstOfMonth = this.firstOfMonth;
+    const daysThisMonth = (today - firstOfMonth) + 1;
+    const daysToSkipAtATime = Math.ceil(daysThisMonth / 9);
+    const options: { value: any, text: string }[] = []
+    for (let day = firstOfMonth; day < today; day = day + daysToSkipAtATime) {
+      const date = this._dateService.getDateFromRelativeDay(day);
+      const label = `${date.getDate()}${this.getOrdinal(date.getDate())}`;
+      options.push({value: day, text: label})
+    }
+    options.push({value: today, text: 'Today'});
+    return options;
+  }
+
+  private getOrdinal(value: number): string {
+    return["st","nd","rd"][((value+90)%100-10)%10-1]||"th";
+  }
+
+  private get thisWeekDateRangeOptions(): { value: any, text: string }[] {
+    const today = this.today;
+    const firstOfWeek = this.firstOfWeek;
+    const options: { value: any, text: string }[] = []
+    for (let day = firstOfWeek; day < today; day++) {
+      const date = this._dateService.getDateFromRelativeDay(day);
+      const label = this.getDayOfWeekString(date.getDay());
+      options.push({value: day, text: label})
+    }
+    options.push({value: today, text: 'Today'});
+    return options;
+  }
+
+  private getDayOfWeekString(value: number): string {
+    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][value-1]; // TODO [TH] Put this somewhere else
+  }
+
+  get percentageRangeOptions(): { value: any, text: string }[] {
+    return [0, 20, 40, 60, 80, 100].map(o => { return { value: o, text: `${o}%` } })
+  }
+
   private get playerCount(): number {
     if (isNullOrUndefined(this.playerDetails)) {
       return 0
     }
     return this.playerDetails.length;
+  }
+
+  private get firstOfAllTime(): number {
+    const date = this._dateService.firstOfAllTime;
+    return this._dateService.getRelativeDay(date);
+  }
+
+  private get firstOfWeek(): number {
+    const date = this._dateService.firstOfWeek;
+    return this._dateService.getRelativeDay(date);
+  }
+
+  private get firstOfMonth(): number {
+    const date = this._dateService.firstOfMonth;
+    return this._dateService.getRelativeDay(date);
   }
 
   private get oneWeekAgoToday(): number {
@@ -279,8 +383,8 @@ export class PercentageGraphComponent implements OnInit {
 
   private _loadData(): void {
     this._graphClient.get(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, 0)
-    .pipe(take(1))
-    .subscribe(
+      .pipe(take(1))
+      .subscribe(
         data => {
           this.players = data;
         },
