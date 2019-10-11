@@ -38,7 +38,7 @@ export class DoubleSliderComponent {
     this.rightValueChange.emit(value);
   };
 
-  @HostListener('touchmove')
+  @HostListener('touchmove', ['$event'])
   onMove(event: any): void {
     if (event.touches.length > 0) {
       const touch = event.touches.item(0);
@@ -51,15 +51,15 @@ export class DoubleSliderComponent {
     this.onPointerMove(event);
   }
 
-  onPointerMove(event: {clientX: number}): void {
+  private onPointerMove(event: {clientX: number}): void {
     const newValue = Math.round(this.getValueFromCoordinate(event.clientX));
     if (this._isDraggingLeft) {
-      if (newValue <= this.rightValue - 1) {
+      if (newValue <= this.rightValue - 1  && newValue >= this.min) {
         this.leftValue = newValue;
       }
     }
     if (this._isDraggingRight) {
-      if (newValue >= this.leftValue + 1) {
+      if (newValue >= this.leftValue + 1 && newValue >= this.max) {
         this.rightValue = newValue;
       }
     }
@@ -74,11 +74,11 @@ export class DoubleSliderComponent {
   }
 
   @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent): void {
+    onMouseDown(event: MouseEvent): void {
     this.onPointerDown(event);
   }
 
-  onPointerDown(event: {clientX: number}): void {
+  private onPointerDown(event: {clientX: number}): void {
     const distanceFromLeft = Math.abs(event.clientX - this.leftCoordinate);
     const distanceFromRight = Math.abs(event.clientX - this.rightCoordinate);
     if (distanceFromLeft < distanceFromRight) {
@@ -86,13 +86,15 @@ export class DoubleSliderComponent {
     } else {
       this._isDraggingRight = true;
     }
-    this.onMouseMove(event);
+    this.onPointerMove(event);
   }
 
   @HostListener('touchend')
   @HostListener('mouseup')
   @HostListener('mouseleave')
-  onMouseUp(): void { this._isDraggingLeft = false; this._isDraggingRight = false; }
+  onDragEnd(): void {
+    this._isDraggingLeft = false; this._isDraggingRight = false; 
+  }
 
   public get clientLeft() { return this._el.nativeElement.getBoundingClientRect().left; }
   public get clientRight() { return this._el.nativeElement.getBoundingClientRect().right; }

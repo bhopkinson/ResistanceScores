@@ -119,6 +119,10 @@ export class PercentageGraphComponent implements OnInit {
     return this.players.filter(p => !this.hiddenPlayers.includes(p.playerId));
   }
 
+  get allPlayersSelected(): boolean {
+    return this.hiddenPlayers.length === 0;
+  }
+
   getWinPercentage(graphPoint: GraphPointDto): number {
     if (graphPoint.totalGames === 0) {
       return 0;
@@ -189,6 +193,14 @@ export class PercentageGraphComponent implements OnInit {
       this.hiddenPlayers = this.hiddenPlayers.filter(hp => hp !== id);
     } else {
       this.hiddenPlayers.push(id);
+    }
+  }
+
+  toggleAllPlayerVisibilities(): void {
+    if (this.allPlayersSelected) {
+      this.hiddenPlayers = this.players.map(p => p.playerId);
+    } else {
+      this.hiddenPlayers = [];
     }
   }
 

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-custom_4">
+      <rect width="40" height="40"/>
+    </clipPath>
+  </defs>
+  <g id="custom_4" data-name="custom – 4" clip-path="url(#clip-custom_4)">
+    <g id="Group_2" data-name="Group 2" transform="translate(37.879 5.051) rotate(90)">
+      <line id="Line_1" data-name="Line 1" x2="30.304" transform="translate(0 3.283)" fill="none" stroke="#000" stroke-width="1.5"/>
+      <line id="Line_2" data-name="Line 2" y1="3.283" x2="3.283" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+      <line id="Line_3" data-name="Line 3" x2="3.283" y2="3.283" transform="translate(0 3.283)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+      <line id="Line_4" data-name="Line 4" x2="3.283" y2="3.283" transform="translate(27.021)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+      <line id="Line_5" data-name="Line 5" y1="3.283" x2="3.283" transform="translate(27.021 3.283)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+    </g>
+    <line id="Line_6" data-name="Line 6" y1="15.657" x2="13.132" transform="translate(8.965 12.248)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="2.5"/>
+    <g id="Ellipse_1" data-name="Ellipse 1" transform="translate(16 21)" fill="none" stroke="#000" stroke-width="2">
+      <ellipse cx="4" cy="4.5" rx="4" ry="4.5" stroke="none"/>
+      <ellipse cx="4" cy="4.5" rx="3" ry="3.5" fill="none"/>
+    </g>
+    <g id="Ellipse_2" data-name="Ellipse 2" transform="translate(6 10)" fill="none" stroke="#000" stroke-width="2">
+      <ellipse cx="4" cy="4.5" rx="4" ry="4.5" stroke="none"/>
+      <ellipse cx="4" cy="4.5" rx="3" ry="3.5" fill="none"/>
+    </g>
+  </g>
+</svg>

@@ -10,12 +10,15 @@
 </div>
 <div *ngIf="!isLoading && !errorOccurred">
   <div class="legend">
-    <p>Legend</p>
     <div class="legend-items">
       <div class="legend-item" *ngFor="let player of players" (click)="togglePlayerVisibility(player.playerId)"
         [class.hidden]="isHidden(player.playerId)">
         <span class="legend-dot" [style.background-color]="getColour(player.playerId)"></span>
         <span>{{getInitials(player.playerId)}}</span>
+      </div>
+      <div class="legend-item toggle-legend-item" (click)="toggleAllPlayerVisibilities()">
+        <span class="legend-dot toggle-legend-dot"></span>
+        <span>{{ allPlayersSelected ? 'Hide' : 'Show' }} all</span>
       </div>
     </div>
   </div>
@@ -61,7 +64,7 @@
 
   <div class="form-group">
     <div class="form-group__label">
-      Dates:
+      <span class="range-icon date-range-icon"></span>
     </div>
     <div class="form-group__content">
       <div class="form-field">
@@ -76,15 +79,15 @@
   </div>
   <div class="form-group">
     <div class="form-group__label">
-      Percentage:
+      <span class="range-icon percentage-range-icon"></span>
     </div>
     <div class="form-group__content">
       <div class="form-field">
         <app-double-slider min="0" max="100" [(leftValue)]="yMin" [(rightValue)]="yMax">
-            <ng-container *ngFor="let option of percentageRangeOptions">
-                <app-double-slider-label [value]="option.value" [text]="option.text"></app-double-slider-label>
-                <app-double-slider-tick [value]="option.value"></app-double-slider-tick>
-              </ng-container>
+          <ng-container *ngFor="let option of percentageRangeOptions">
+            <app-double-slider-label [value]="option.value" [text]="option.text"></app-double-slider-label>
+            <app-double-slider-tick [value]="option.value"></app-double-slider-tick>
+          </ng-container>
         </app-double-slider>
       </div>
     </div>
