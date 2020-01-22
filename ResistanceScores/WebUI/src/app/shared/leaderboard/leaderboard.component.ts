@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LeaderboardDto, LeaderboardClient, Team, Timescale, GameOverviewDto, GameSummaryDto, GameListDto } from '../../services/web-api.service.generated';
-import { take, timeInterval } from 'rxjs/operators';
-import { Constants } from '../../constants';
+import { LeaderboardDto, LeaderboardClient, Team, Timescale, GameSummaryDto, Role } from '../../services/web-api.service.generated';
+import { take, switchMap, map, startWith, tap, catchError } from 'rxjs/operators';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-leaderboard',
@@ -10,29 +10,30 @@ import { Constants } from '../../constants';
 })
 export class LeaderboardComponent implements OnInit {
 
-  constructor(private _leaderboardClient: LeaderboardClient) { }
+  constructor(private _fb: FormBuilder, private _leaderboardClient: LeaderboardClient) { }
 
   public leaderboard: LeaderboardDto[] = [];
   public isLoading = true;
   public errorOccurred = false;
-  private _teamFilter = Team.None;
-  private _timescaleFilter = Timescale.AllTime;
-  private _noOfPlayersFilter = 4;
-  private _asOfWhenFilter = 0;
   public Team = Team;
   public Timescale = Timescale;
+  public Role = Role;
+
+  private _defaultCriteria: Criteria = {
+    timescale: Timescale.AllTime,
+    team: Team.None,
+    noOfPlayers: 4,
+    role: Role.None,
+    asOfWhen: 0
+  };
+
+  public filters = this._fb.group(this._defaultCriteria);
 
   ngOnInit() {
-    this._leaderboardClient
-      .getLeaderboard(Team.None, Timescale.AllTime, 4, 0)
-      .pipe(take(1))
-      .subscribe(
-        leaderboard => {
-        this.leaderboard = leaderboard.sort(this.sortByPercentageFn);
-          this.isLoading = false;
-        },
-        error => { this.errorOccurred = true; }
-      )
+    this.filters
+      .valueChanges
+      .pipe(startWith(this._defaultCriteria))
+      .subscribe(o => this._loadData(o));
   }
 
   getLossCount(player: LeaderboardDto): number {
@@ -45,66 +46,10 @@ export class LeaderboardComponent implements OnInit {
       : 0;
   }
 
-  get teamFilter(): number {
-    return this._teamFilter;
-  }
-
-  set teamFilter(value: number) {
-    if (value === this._teamFilter) {
-      return;
-    }
-
-    this._teamFilter = value;
-
-    this._loadData();
-  }
-
-  get timescaleFilter(): number {
-    return this._timescaleFilter;
-  }
-
-  set timescaleFilter(value: number) {
-    if (value === this._timescaleFilter) {
-      return;
-    }
-
-    this._timescaleFilter = value;
-
-    this._loadData();
-  }
-
-  get noOfPlayersFilter(): number {
-    return this._noOfPlayersFilter;
-  }
-
-  set noOfPlayersFilter(value: number) {
-    if (value === this._noOfPlayersFilter) {
-      return;
-    }
-
-    this._noOfPlayersFilter = value;
-
-    this._loadData();
-  }
-
-  get asOfWhenFilter(): number {
-    return this._asOfWhenFilter;
-  }
-
-  set asOfWhenFilter(value: number) {
-    if (value === this._asOfWhenFilter) {
-      return;
-    }
-
-    this._asOfWhenFilter = value;
-
-    this._loadData();
-  }
-
   reloadData(): void {
     this.isLoading = true;
     this.errorOccurred = false;
-    this._loadData();
+    this._loadData(this.filters.value);
   }
 
   private sortByPercentageFn = (a: LeaderboardDto, b: LeaderboardDto) => {
@@ -114,16 +59,24 @@ export class LeaderboardComponent implements OnInit {
       : b.totalGames - a.totalGames; // TODO [TH] rename the sort function and centralise it and refactor it
   }
 
-  private _loadData(): void {
+  private _loadData(criteria: Criteria): void {
     this._leaderboardClient
-      .getLeaderboard(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, this.asOfWhenFilter)
+      .getLeaderboard(criteria.team, criteria.timescale, criteria.noOfPlayers, criteria.asOfWhen, criteria.role)
       .pipe(take(1))
       .subscribe(
         leaderboard => {
           this.leaderboard = leaderboard.sort(this.sortByPercentageFn);
+          this.isLoading = false;
         },
         error => { this.errorOccurred = true; }
-      )
+      );
   }
-
 }
+
+interface Criteria {
+  team: Team;
+  timescale: Timescale;
+  noOfPlayers: number;
+  asOfWhen: number;
+  role: Role;
+};

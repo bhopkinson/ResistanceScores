@@ -9,7 +9,11 @@
   <router-outlet></router-outlet>
 </main>
 <nav class="bottom-nav">
-  <div></div>
+  <div>
+    <a [routerLink]="['']">Home</a>
+    <a [routerLink]="['games']">Games</a>
+    <a [routerLink]="['players']">Players</a>
+  </div>
   <app-css-theme></app-css-theme>
   <app-versioning></app-versioning>
 </nav>

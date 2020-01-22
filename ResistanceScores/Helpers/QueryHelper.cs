@@ -65,6 +65,18 @@ namespace ResistanceScores.Helpers
             return g => g.Game.Date.AddDays(asOfWhen) < DateTime.Now;
         }
 
+        public static Expression<Func<GamePlayer, bool>> GetRoleWhereClause(Role role)
+        {
+            if (role == Role.None)
+            {
+                return g => true;
+            }
+            else
+            {
+                return g => g.Role == role;
+            }
+        }
+
         public static Expression<Func<GamePlayer,bool>> GetWinWhereClause()
         {
             return g =>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GraphClient, GraphPointDto, GraphPlayerDto, PlayerClient, Team, Timescale } from '../../services/web-api.service.generated';
+import { GraphClient, GraphPointDto, GraphPlayerDto, PlayerClient, Team, Timescale, Role } from '../../services/web-api.service.generated';
 import { take, first } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { DateService } from 'src/app/services/date.service';
@@ -40,7 +40,7 @@ export class PercentageGraphComponent implements OnInit {
   private _noOfPlayersFilter = 4;
 
   ngOnInit() {
-    this._graphClient.get(Team.None, Timescale.AllTime, 4, 0)
+    this._graphClient.get(Team.None, Timescale.AllTime, 4, 0, Role.None)
       .pipe(take(1))
       .subscribe(
         data => {
@@ -394,7 +394,7 @@ export class PercentageGraphComponent implements OnInit {
   }
 
   private _loadData(): void {
-    this._graphClient.get(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, 0)
+    this._graphClient.get(this.teamFilter, this.timescaleFilter, this.noOfPlayersFilter, 0, Role.None)
       .pipe(take(1))
       .subscribe(
         data => {

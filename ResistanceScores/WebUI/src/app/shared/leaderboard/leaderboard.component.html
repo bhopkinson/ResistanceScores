@@ -29,24 +29,35 @@
   Click here to reload.
 </div>
 
-<app-button-select [(ngModel)]="teamFilter">
-  <app-button-select-option [value]="Team.None">All games</app-button-select-option>
-  <app-button-select-option [value]="Team.Resistance">Just resistance</app-button-select-option>
-  <app-button-select-option [value]="Team.Spy">Just spies</app-button-select-option>
-</app-button-select>
+<form [formGroup]="filters">
+  <app-button-select formControlName="team">
+    <app-button-select-option [selected]="true" [value]="Team.None">All games</app-button-select-option>
+    <app-button-select-option [value]="Team.Resistance">Just resistance</app-button-select-option>
+    <app-button-select-option [value]="Team.Spy">Just spies</app-button-select-option>
+  </app-button-select>
 
-<app-button-select [(ngModel)]="timescaleFilter">
-  <app-button-select-option [value]="Timescale.AllTime">All time</app-button-select-option>
-  <app-button-select-option [value]="Timescale.Last7Days">This week</app-button-select-option>
-  <app-button-select-option [value]="Timescale.Last30Days">This month</app-button-select-option>
-</app-button-select>
+  <app-button-select formControlName="timescale">
+    <app-button-select-option [selected]="true" [value]="Timescale.AllTime">All time</app-button-select-option>
+    <app-button-select-option [value]="Timescale.Last7Days">This week</app-button-select-option>
+    <app-button-select-option [value]="Timescale.Last30Days">This month</app-button-select-option>
+  </app-button-select>
 
-<app-button-select [(ngModel)]="noOfPlayersFilter">
-  <app-button-select-option [value]="4">All sizes</app-button-select-option>
-  <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P</app-button-select-option>
-</app-button-select>
+  <app-button-select formControlName="noOfPlayers">
+    <app-button-select-option [selected]="true" [value]="4">All sizes</app-button-select-option>
+    <app-button-select-option *ngFor="let value of [5,6,7,8,9,10,11]" [value]="value">{{value}}P
+    </app-button-select-option>
+  </app-button-select>
 
-<app-button-select [(ngModel)]="asOfWhenFilter">
-  <app-button-select-option [value]="0">As of today</app-button-select-option>
-  <app-button-select-option [value]="1">As of yesterday</app-button-select-option>
-</app-button-select>
+  <app-button-select formControlName="asOfWhen">
+    <app-button-select-option [selected]="true" [value]="0">As of today</app-button-select-option>
+    <app-button-select-option [value]="1">As of yesterday</app-button-select-option>
+  </app-button-select>
+
+  <app-button-select formControlName="role">
+    <app-button-select-option [selected]="true" [value]="Role.None">All roles</app-button-select-option>
+    <app-button-select-option [value]="Role.Regular">Regular</app-button-select-option>
+    <app-button-select-option [value]="Role.Hunter">Hunter</app-button-select-option>
+    <app-button-select-option [value]="Role.Chief">Chief</app-button-select-option>
+    <app-button-select-option [value]="Role.Dummy">Dummy</app-button-select-option>
+  </app-button-select>
+</form>

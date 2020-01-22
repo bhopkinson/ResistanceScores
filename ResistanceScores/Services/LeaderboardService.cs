@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ResistanceScores.Enums;
 using ResistanceScores.Helpers;
 using ResistanceScores.Models;
 using ResistanceScores.Models.api;
@@ -31,6 +32,7 @@ namespace ResistanceScores.Services
             var teamClause = QueryHelper.GetTeamWhereClause(queryOptions.Team);
             var gameSizeClause = QueryHelper.GetGameSizeWhereClause(queryOptions.NoOfPlayers);
             var asOfWhenClause = QueryHelper.GetAsOfWhenWhereClause(queryOptions.AsOfWhen);
+            var roleClause = QueryHelper.GetRoleWhereClause(queryOptions.Role);
             var playerWinWhereClause = QueryHelper.GetWinWhereClause();
 
             var leaderboard = await query
@@ -43,12 +45,14 @@ namespace ResistanceScores.Services
                         .Where(teamClause)
                         .Where(gameSizeClause)
                         .Where(asOfWhenClause)
+                        .Where(roleClause)
                         .Where(playerWinWhereClause).Count(),
                     TotalGames = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
                         .Where(gameSizeClause)
                         .Where(asOfWhenClause)
+                        .Where(roleClause)
                         .Count(),
                 })
                 .ToListAsync();

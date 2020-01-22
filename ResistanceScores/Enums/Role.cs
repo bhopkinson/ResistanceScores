@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ResistanceScores.Enums
+﻿namespace ResistanceScores.Enums
 {
     public enum Role
     {
