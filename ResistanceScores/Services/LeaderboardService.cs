@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ResistanceScores.Enums;
+using ResistanceScores.Helpers;
 using ResistanceScores.Models;
 using ResistanceScores.Models.api;
 
@@ -26,46 +28,12 @@ namespace ResistanceScores.Services
                 .Include(x => x.Games)
                 .ThenInclude(x => x.Game);
 
-            Expression<Func<GamePlayer, bool>> teamClause;
-            switch (queryOptions.Team)
-            {
-                case Enums.Team.Resistance:
-                    teamClause = g => g.WasResistance;
-                    break;
-                case Enums.Team.Spy:
-                    teamClause = g => !g.WasResistance;
-                    break;
-                default:
-                    teamClause = g => true;
-                    break;
-            }
-            Expression<Func<GamePlayer, bool>> timescaleClause;
-            var thisMonday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
-            switch (queryOptions.Timescale)
-            {
-                case Enums.Timescale.Last30Days:
-                    timescaleClause = g => DateTime.Now.Month == g.Game.Date.Month && DateTime.Now.Year == g.Game.Date.Year;
-                    break;
-                case Enums.Timescale.Last7Days:
-                    timescaleClause = g => thisMonday <= g.Game.Date;
-                    break;
-                default:
-                    timescaleClause = g => true;
-                    break;
-            }
-
-            Expression<Func<GamePlayer, bool>> noOfPlayersClause;
-            if (queryOptions.NoOfPlayers > 4) // 4 is the "All team sizes" option
-            {
-                noOfPlayersClause = g => g.Game.Players.Count == queryOptions.NoOfPlayers;
-            }
-            else
-            {
-                noOfPlayersClause = g => true;
-            }
-
-            Expression<Func<GamePlayer, bool>> asOfWhenClause;
-            asOfWhenClause = g => g.Game.Date.AddDays(queryOptions.AsOfWhen) < DateTime.Now;
+            var timescaleClause = QueryHelper.GetTimescaleWhereClause(queryOptions.Timescale);
+            var teamClause = QueryHelper.GetTeamWhereClause(queryOptions.Team);
+            var gameSizeClause = QueryHelper.GetGameSizeWhereClause(queryOptions.NoOfPlayers);
+            var asOfWhenClause = QueryHelper.GetAsOfWhenWhereClause(queryOptions.AsOfWhen);
+            var roleClause = QueryHelper.GetRoleWhereClause(queryOptions.Role);
+            var playerWinWhereClause = QueryHelper.GetWinWhereClause();
 
             var leaderboard = await query
                 .Select(o => new LeaderboardDto
@@ -75,14 +43,16 @@ namespace ResistanceScores.Services
                     Wins = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
-                        .Where(noOfPlayersClause)
+                        .Where(gameSizeClause)
                         .Where(asOfWhenClause)
-                        .Where(g => (g.WasResistance && g.Game.ResistanceWin) || (!g.WasResistance && !g.Game.ResistanceWin)).Count(),
+                        .Where(roleClause)
+                        .Where(playerWinWhereClause).Count(),
                     TotalGames = o.Games.AsQueryable()
                         .Where(timescaleClause)
                         .Where(teamClause)
-                        .Where(noOfPlayersClause)
+                        .Where(gameSizeClause)
                         .Where(asOfWhenClause)
+                        .Where(roleClause)
                         .Count(),
                 })
                 .ToListAsync();

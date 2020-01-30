@@ -16,6 +16,10 @@
       opacity: 0.5;
     }
 
+    &.toggle-legend-item {
+      font-style: italic;
+    }
+
   }
 
   .legend-dot {
@@ -24,5 +28,56 @@
     height: 1rem;
     border-radius: 1rem;
     margin: 0 0.25rem;
+
+    &.toggle-legend-dot {
+      background-color: var(--foreground-color-4);
+    }
+  }
+}
+
+.form-group {
+  display: flex;
+
+  .form-group__label {
+    text-align: end;
+    margin: auto;
+  }
+
+  .form-group__content {
+    flex-grow: 1;
+    padding: 0 24px;
+    
+    .form-field {
+      display: flex;
+
+      label {
+        flex: 1;
+      }
+
+      input {
+        flex: 3;
+      }
+    }
+
+  }
+}
+
+.range-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 12px;
+  
+  &.date-range-icon {
+    background-color: var(--foreground-color);
+    mask: url('../../../assets/icons/date-range_40x40.svg') no-repeat center;
+    -webkit-mask: url('../../../assets/icons/date-range_40x40.svg') no-repeat center;
+    
+  }
+  
+  &.percentage-range-icon {
+    background-color: var(--foreground-color);
+    mask: url('../../../assets/icons/percentage-range_40x40.svg') no-repeat center;
+    -webkit-mask: url('../../../assets/icons/percentage-range_40x40.svg') no-repeat center;
   }
 }

@@ -16,7 +16,9 @@ namespace ResistanceScores.Models.api
         [Range(4, 11)]
         public int NoOfPlayers { get; set; }
 
-        [Range(0,int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int AsOfWhen { get; set; }
+
+        public Role Role { get; set; }
     }
 }
