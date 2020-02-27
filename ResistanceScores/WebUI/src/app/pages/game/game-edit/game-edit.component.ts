@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameClient, GameUpdateDto, PlayerListingDto, PlayerClient, GamePlayerUpdateDto, Role } from '../../../services/web-api.service.generated';
-import { take, retry } from 'rxjs/operators';
+import { take, retry, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game-edit',
@@ -48,7 +48,7 @@ export class GameEditComponent implements OnInit {
 
     this._playerClient.getPlayers()
       .pipe(take(1))
-      .subscribe(players => this.players = players);
+      .subscribe(players => this.players = players.filter(p => !p.isArchived || !this.isNew));
 
     if (!this.isNew) {
       this.gameId = parseInt(this._activatedRoute.snapshot.paramMap.get('id'));
