@@ -74,7 +74,7 @@ export class GameEditComponent implements OnInit {
           g.players
             .filter(p => p.role === Role.Dummy)
             .forEach(p => this.dummyId = p.id);
-          if (this.hunterIds.length > 0) {
+          if (this.chiefIds.length > 0 || this.hunterIds.length > 0 || this.defectorIds.length > 0) {
             this.hasExtraDetails = true;
           }
           this.resistanceWin = g.resistanceWin;
