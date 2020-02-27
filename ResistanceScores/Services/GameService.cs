@@ -128,7 +128,7 @@ namespace ResistanceScores.Services
                 GameId = game.Id,
                 PlayerId = o.Id,
                 WasResistance = o.WasResistance,
-                Role = p.Role
+                Role = o.Role
             })
             .ToList();
 
